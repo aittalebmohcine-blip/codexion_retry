@@ -17,4 +17,4 @@ codexion/
     └── utils.c              # Helpers: time fetching (gettimeofday), thread-safe logging, safe malloc/free
 
 ## TO DO
-- [ ] 
+- [ ] revise the Makefile.
