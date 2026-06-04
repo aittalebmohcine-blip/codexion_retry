@@ -18,7 +18,28 @@ SRCS        = $(SRC_DIR)/main.c \
               $(SRC_DIR)/coder.c \
               $(SRC_DIR)/dongle.c \
               $(SRC_DIR)/scheduler.c \
-              $(SRC_DIR)/monito…nsures the directory exists before compiling (Order-only prerequisite)
+              $(SRC_DIR)/monitor.c \
+              $(SRC_DIR)/utils.c
+
+# --- Object Files (maps src/*.c to obj/*.o) ---
+OBJS        = $(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
+
+# --- Include Flags ---
+INCLUDES    = -I $(INC_DIR)
+
+# **************************************************************************** #
+#                                    Rules                                     #
+# **************************************************************************** #
+
+# Default rule
+all:        $(NAME)
+
+# Linking rule: Only links if object files are up to date
+$(NAME):    $(OBJS)
+			$(CC) $(CFLAGS) $(LDFLAGS) $(OBJS) -o $(NAME)
+
+# Compilation rule: Compiles .c to .o only if the .c file is newer than the .o file
+# The '| $(OBJ_DIR)' ensures the directory exists before compiling (Order-only prerequisite)
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
 			$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
