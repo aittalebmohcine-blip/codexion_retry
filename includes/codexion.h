@@ -23,16 +23,21 @@ typedef struct s_config
 	t_scheduler	scheduler;
 }	t_config;
 
-typedef struct s_coder
-{
-	int			id;
-	pthread_t	thread;
-}	t_coder;
-
 typedef struct s_dongle
 {
 	pthread_mutex_t	mutex;
 }	t_dongle;
+
+typedef struct s_coder
+{
+	int					id;
+	pthread_t			thread;
+
+	t_dongle	*left_dongle;
+	t_dongle	*right_dongle;
+
+	struct s_simulation	*sim;
+}	t_coder;
 
 typedef struct s_simulation
 {
@@ -42,5 +47,10 @@ typedef struct s_simulation
 }	t_simulation;
 
 int	parse_arguments(int argc, char **argv, t_config *config);
+
+int		init_simulation(t_simulation *sim, t_config *config);
+int		start_simulation(t_simulation *sim);
+void	wait_simulation(t_simulation *sim);
+void	destroy_simulation(t_simulation *sim);
 
 #endif

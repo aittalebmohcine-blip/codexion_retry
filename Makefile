@@ -15,8 +15,8 @@ INC_DIR     = includes
 # --- Source Files ---
 SRCS        = $(SRC_DIR)/main.c \
               $(SRC_DIR)/utils.c \
+							$(SRC_DIR)/simulation.c \
 #              $(SRC_DIR)/coder.c \
-#              $(SRC_DIR)/simulation.c \
 #              $(SRC_DIR)/dongle.c \
 #              $(SRC_DIR)/scheduler.c \
 #              $(SRC_DIR)/monitor.c \
