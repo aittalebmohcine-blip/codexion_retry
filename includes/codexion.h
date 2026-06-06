@@ -23,6 +23,24 @@ typedef struct s_config
 	t_scheduler	scheduler;
 }	t_config;
 
+typedef struct s_coder
+{
+	int			id;
+	pthread_t	thread;
+}	t_coder;
+
+typedef struct s_dongle
+{
+	pthread_mutex_t	mutex;
+}	t_dongle;
+
+typedef struct s_simulation
+{
+	t_config		config;
+	t_coder			*coders;
+	t_dongle		*dongles;
+}	t_simulation;
+
 int	parse_arguments(int argc, char **argv, t_config *config);
 
 #endif
