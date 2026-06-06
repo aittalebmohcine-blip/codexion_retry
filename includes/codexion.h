@@ -1,28 +1,28 @@
 #ifndef CODEXION_H
 # define CODEXION_H
 
-typedef enum e_coder_state
-{
-	IDLE,
-	WORKING
-}	t_coder_state;
+# include <stdlib.h>
+# include <stdio.h>
+# include <string.h>
 
-typedef struct s_coder
+typedef enum e_scheduler
 {
-	int				id;
-	t_coder_state	state;
-}	t_coder;
+	SCHED_FIFO,
+	SCHED_EDF
+}	t_scheduler;
 
-typedef struct s_resource
+typedef struct s_config
 {
-	int				owner_id;
-}	t_resource;
+	int		number_of_coders;
+	int		time_to_burnout;
+	int		time_to_compile;
+	int		time_to_debug;
+	int		time_to_refactor;
+	int		number_of_compiles_required;
+	int		dongle_cooldown;
+	t_scheduler	scheduler;
+}	t_config;
 
-typedef struct s_simulation
-{
-	int				running;
-	t_coder		*coders;
-	t_resource		resource;
-}	t_simulation;
+int	parse_arguments(int argc, char **argv, t_config *config);
 
-#endif /* CODEXION_H */
+#endif
