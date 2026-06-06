@@ -22,6 +22,7 @@ codexion/
 
 ## TO DO
 - [ ] revise the Makefile.
+- [ ] verify the parsing logic
 
 5. Next Steps for Your "Project Thinking"
 To build this effectively, follow this iterative development path:
@@ -32,3 +33,19 @@ To build this effectively, follow this iterative development path:
     Step 4: Two Coders (The Deadlock Test). Introduce 2 coders. Implement the logic where a coder must acquire both dongles. Implement the "drop and retry" mechanism if it can't get the second one.
     Step 5: The Monitor. Add the monitor thread. Test burnout by setting time_to_burnout to a very low number (e.g., 50ms) and time_to_compile to a high number. Verify the log appears within 10ms of the actual deadline.
     Step 6: Scale and Refine. Test with 5+ coders, test the dongle_cooldown, and ensure the EDF scheduler prevents starvation.
+
+
+
+---
+T1: request_resource(worker)
+T2: acquire_resource(worker)
+T3: release_resource(worker)
+T4: do_work(worker)
+
+STATE
+    ↓
+TRANSITIONS
+    ↓
+NEW STATE
+
+This is the foundation.
