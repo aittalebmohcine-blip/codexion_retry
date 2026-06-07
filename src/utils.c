@@ -51,8 +51,16 @@ int	parse_arguments(int argc, char **argv, t_config *config)
 	if (strcmp(argv[8], "fifo") == 0)
 		config->scheduler = SCHED_FIFO;
 	else if (strcmp(argv[8], "edf") == 0)
-		config->scheduler = SCHED_EDF;
+		config->scheduler = SCHEDULER_EDF;
 	else
 		return (print_error("Invalid scheduler. Use 'fifo' or 'edf'."), 0);
 	return (1);
+}
+
+long long	get_time_ms(void)
+{
+	struct timeval	tv;
+
+	gettimeofday(&tv, NULL);
+	return ((tv.tv_sec * 1000LL) + (tv.tv_usec / 1000));
 }

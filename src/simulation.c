@@ -1,5 +1,9 @@
 #include "../includes/codexion.h"
-#include <pthread.h>
+
+long long	get_sim_time(t_simulation *sim)
+{
+	return (get_time_ms() - sim->start_time_ms);
+}
 
 static int	init_dongles(t_simulation *sim)
 {
@@ -51,6 +55,7 @@ static int	alloc_simulation(t_simulation *sim)
 
 int	init_simulation(t_simulation *sim, t_config *config)
 {
+	pthread_mutex_init(&sim->log_mutex, NULL);
 	if (!sim || !config)
 		return (0);
 	sim->config = *config;
@@ -66,4 +71,35 @@ int	init_simulation(t_simulation *sim, t_config *config)
 	}
 	init_coders(sim);
 	return (1);
+}
+
+int	start_simulation(t_simulation *sim)
+{
+	int	i;
+
+	sim->start_time_ms = get_time_ms();
+	i = 0;
+	while (i < sim->config.number_of_coders)
+	{
+		if (pthread_create(
+				&sim->coders[i].thread,
+				NULL,
+				coder_routine,
+				&sim->coders[i]))
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
+void	wait_simulation(t_simulation *sim)
+{
+	int	i;
+
+	i = 0;
+	while (i < sim->config.number_of_coders)
+	{
+		pthread_join(sim->coders[i].thread, NULL);
+		i++;
+	}
 }

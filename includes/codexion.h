@@ -4,11 +4,21 @@
 # include <stdlib.h>
 # include <stdio.h>
 # include <string.h>
+#include <pthread.h>
+#include <unistd.h>
+#include <sys/time.h>
+
+typedef enum e_coder_state
+{
+	STATE_COMPILING,
+	STATE_DEBUGGING,
+	STATE_REFACTORING
+}	t_coder_state;
 
 typedef enum e_scheduler
 {
-	SCHED_FIFO,
-	SCHED_EDF
+	SCHEDULER_FIFO,
+	SCHEDULER_EDF
 }	t_scheduler;
 
 typedef struct s_config
@@ -35,22 +45,42 @@ typedef struct s_coder
 
 	t_dongle	*left_dongle;
 	t_dongle	*right_dongle;
+	t_coder_state	state;
 
 	struct s_simulation	*sim;
 }	t_coder;
 
 typedef struct s_simulation
 {
-	t_config		config;
-	t_coder			*coders;
-	t_dongle		*dongles;
+	t_config	config;
+	t_coder		*coders;
+	t_dongle	*dongles;
+
+	pthread_mutex_t	log_mutex;
+	long long	start_time_ms;
 }	t_simulation;
 
+///
 int	parse_arguments(int argc, char **argv, t_config *config);
+long long	get_time_ms(void);
+
+///
+void	*coder_routine(void *arg);
+void	log_action(t_coder *coder, char *msg);
+
+void	take_dongles(t_coder *coder);
+void	release_dongles(t_coder *coder);
+
+void	compile(t_coder *coder);
+void	debug(t_coder *coder);
+void	refactor(t_coder *coder);
+///
 
 int		init_simulation(t_simulation *sim, t_config *config);
 int		start_simulation(t_simulation *sim);
 void	wait_simulation(t_simulation *sim);
 void	destroy_simulation(t_simulation *sim);
+
+long long	get_sim_time(t_simulation *sim);
 
 #endif
