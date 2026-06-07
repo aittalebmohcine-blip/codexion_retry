@@ -55,6 +55,7 @@ static int	alloc_simulation(t_simulation *sim)
 
 int	init_simulation(t_simulation *sim, t_config *config)
 {
+	sim->should_stop = 0;
 	pthread_mutex_init(&sim->log_mutex, NULL);
 	if (!sim || !config)
 		return (0);

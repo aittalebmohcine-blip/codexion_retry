@@ -58,11 +58,13 @@ void	*coder_routine(void *arg)
 	t_coder	*coder;
 
 	coder = (t_coder *)arg;
-	while (1)
+	while (!coder->sim->should_stop)
 	{
 		take_dongles(coder);
+
 		compile(coder);
 		release_dongles(coder);
+
 		debug(coder);
 		refactor(coder);
 	}

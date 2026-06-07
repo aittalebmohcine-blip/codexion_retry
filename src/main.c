@@ -13,6 +13,8 @@ int	main(int argc, char **argv)
 		return (1);
 	if (!start_simulation(&sim))
 		return (1);
+	sleep(5);
+	sim.should_stop = 1;
 	wait_simulation(&sim);
 	return (0);
 }

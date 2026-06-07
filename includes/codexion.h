@@ -58,6 +58,7 @@ typedef struct s_simulation
 
 	pthread_mutex_t	log_mutex;
 	long long	start_time_ms;
+	int	should_stop;
 }	t_simulation;
 
 ///
