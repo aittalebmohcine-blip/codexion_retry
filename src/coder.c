@@ -37,20 +37,24 @@ void	release_dongles(t_coder *coder)
 
 void	compile(t_coder *coder)
 {
+	coder->last_compile_time_ms = get_sim_time(coder->sim);
 	set_state(coder, STATE_COMPILING);
-	usleep(coder->sim->config.time_to_compile * 1000);
+	smart_sleep(coder->sim,
+		coder->sim->config.time_to_compile);
 }
 
 void	debug(t_coder *coder)
 {
 	set_state(coder, STATE_DEBUGGING);
-	usleep(coder->sim->config.time_to_debug * 1000);
+	smart_sleep(coder->sim,
+		coder->sim->config.time_to_debug);
 }
 
 void	refactor(t_coder *coder)
 {
 	set_state(coder, STATE_REFACTORING);
-	usleep(coder->sim->config.time_to_refactor * 1000);
+	smart_sleep(coder->sim,
+		coder->sim->config.time_to_refactor);
 }
 
 void	*coder_routine(void *arg)

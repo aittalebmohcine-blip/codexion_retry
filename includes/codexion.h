@@ -48,6 +48,8 @@ typedef struct s_coder
 	t_coder_state	state;
 
 	struct s_simulation	*sim;
+
+	long long	last_compile_time_ms;
 }	t_coder;
 
 typedef struct s_simulation
@@ -58,8 +60,13 @@ typedef struct s_simulation
 
 	pthread_mutex_t	log_mutex;
 	long long	start_time_ms;
+	pthread_t	monitor_thread;
+
 	int	should_stop;
+	pthread_mutex_t	stop_mutex;
 }	t_simulation;
+
+void	*monitor_routine(void *arg);
 
 ///
 int	parse_arguments(int argc, char **argv, t_config *config);
@@ -83,5 +90,10 @@ void	wait_simulation(t_simulation *sim);
 void	destroy_simulation(t_simulation *sim);
 
 long long	get_sim_time(t_simulation *sim);
+
+int	simulation_stopped(t_simulation *sim);
+void	stop_simulation(t_simulation *sim);
+//
+void	smart_sleep(t_simulation *sim, long long duration_ms);
 
 #endif

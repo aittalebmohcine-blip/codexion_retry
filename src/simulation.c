@@ -55,6 +55,7 @@ static int	alloc_simulation(t_simulation *sim)
 
 int	init_simulation(t_simulation *sim, t_config *config)
 {
+	pthread_mutex_init(&sim->stop_mutex, NULL);
 	sim->should_stop = 0;
 	pthread_mutex_init(&sim->log_mutex, NULL);
 	if (!sim || !config)
@@ -90,6 +91,8 @@ int	start_simulation(t_simulation *sim)
 			return (0);
 		i++;
 	}
+	if (pthread_create(&sim->monitor_thread, NULL, monitor_routine, sim))
+		return (0);
 	return (1);
 }
 
@@ -103,4 +106,22 @@ void	wait_simulation(t_simulation *sim)
 		pthread_join(sim->coders[i].thread, NULL);
 		i++;
 	}
+	pthread_join(sim->monitor_thread, NULL);
+}
+
+int	simulation_stopped(t_simulation *sim)
+{
+	int	value;
+
+	pthread_mutex_lock(&sim->stop_mutex);
+	value = sim->should_stop;
+	pthread_mutex_unlock(&sim->stop_mutex);
+	return (value);
+}
+
+void	stop_simulation(t_simulation *sim)
+{
+	pthread_mutex_lock(&sim->stop_mutex);
+	sim->should_stop = 1;
+	pthread_mutex_unlock(&sim->stop_mutex);
 }

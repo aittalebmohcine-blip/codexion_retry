@@ -64,3 +64,16 @@ long long	get_time_ms(void)
 	gettimeofday(&tv, NULL);
 	return ((tv.tv_sec * 1000LL) + (tv.tv_usec / 1000));
 }
+
+void	smart_sleep(t_simulation *sim, long long duration_ms)
+{
+	long long	start;
+
+	start = get_time_ms();
+	while (!simulation_stopped(sim))
+	{
+		if (get_time_ms() - start >= duration_ms)
+			break ;
+		usleep(500);
+	}
+}
