@@ -76,7 +76,7 @@ long long	get_time_ms(void);
 void	*coder_routine(void *arg);
 void	log_action(t_coder *coder, char *msg);
 
-void	take_dongles(t_coder *coder);
+int	take_dongles(t_coder *coder);
 void	release_dongles(t_coder *coder);
 
 void	compile(t_coder *coder);

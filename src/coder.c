@@ -1,4 +1,5 @@
 #include "../includes/codexion.h"
+#include <pthread.h>
 
 static void	set_state(t_coder *coder, t_coder_state state)
 {
@@ -11,32 +12,76 @@ static void	set_state(t_coder *coder, t_coder_state state)
 		log_action(coder, "is refactoring");
 }
 
-void	take_dongles(t_coder *coder)
+static void	get_dongle_order(t_coder *coder,
+	pthread_mutex_t **first,
+	pthread_mutex_t **second)
 {
-	if (coder->id % 2 == 0)
+	if (coder->left_dongle < coder->right_dongle)
 	{
-		pthread_mutex_lock(&coder->right_dongle->mutex);
-		log_action(coder, "has taken a dongle");
-		pthread_mutex_lock(&coder->left_dongle->mutex);
-		log_action(coder, "has taken a dongle");
+		*first = &coder->left_dongle->mutex;
+		*second = &coder->right_dongle->mutex;
 	}
 	else
 	{
-		pthread_mutex_lock(&coder->left_dongle->mutex);
-		log_action(coder, "has taken a dongle");
-		pthread_mutex_lock(&coder->right_dongle->mutex);
-		log_action(coder, "has taken a dongle");
+		*first = &coder->right_dongle->mutex;
+		*second = &coder->left_dongle->mutex;
 	}
+}
+
+static int	lock_first_dongle(t_coder *coder, pthread_mutex_t *first)
+{
+	pthread_mutex_lock(first);
+	log_action(coder, "has taken a dongle");
+	if (simulation_stopped(coder->sim))
+	{
+		pthread_mutex_unlock(first);
+		return (0);
+	}
+	return (1);
+}
+
+int	take_dongles(t_coder *coder)
+{
+	pthread_mutex_t	*first;
+	pthread_mutex_t	*second;
+
+	if (coder->left_dongle == coder->right_dongle)
+		return (0);
+	get_dongle_order(coder, &first, &second);
+	if (!lock_first_dongle(coder, first))
+		return (0);
+	pthread_mutex_lock(second);
+	log_action(coder, "has taken a dongle");
+	if (simulation_stopped(coder->sim))
+	{
+		pthread_mutex_unlock(second);
+		pthread_mutex_unlock(first);
+		return (0);
+	}
+	return (1);
 }
 
 void	release_dongles(t_coder *coder)
 {
-	pthread_mutex_unlock(&coder->left_dongle->mutex);
-	pthread_mutex_unlock(&coder->right_dongle->mutex);
+	if (coder->left_dongle < coder->right_dongle)
+	{
+		pthread_mutex_unlock(&coder->right_dongle->mutex);
+		pthread_mutex_unlock(&coder->left_dongle->mutex);
+	}
+	else
+	{
+		pthread_mutex_unlock(&coder->left_dongle->mutex);
+		pthread_mutex_unlock(&coder->right_dongle->mutex);
+	}
 }
 
 void	compile(t_coder *coder)
 {
+	if (simulation_stopped(coder->sim))
+	{
+		release_dongles(coder);
+		return ;
+	}
 	coder->last_compile_time_ms = get_sim_time(coder->sim);
 	set_state(coder, STATE_COMPILING);
 	smart_sleep(coder->sim,
@@ -45,6 +90,8 @@ void	compile(t_coder *coder)
 
 void	debug(t_coder *coder)
 {
+	if (simulation_stopped(coder->sim))
+		return ;
 	set_state(coder, STATE_DEBUGGING);
 	smart_sleep(coder->sim,
 		coder->sim->config.time_to_debug);
@@ -52,6 +99,8 @@ void	debug(t_coder *coder)
 
 void	refactor(t_coder *coder)
 {
+	if (simulation_stopped(coder->sim))
+		return ;
 	set_state(coder, STATE_REFACTORING);
 	smart_sleep(coder->sim,
 		coder->sim->config.time_to_refactor);
@@ -62,13 +111,12 @@ void	*coder_routine(void *arg)
 	t_coder	*coder;
 
 	coder = (t_coder *)arg;
-	while (!coder->sim->should_stop)
+	while (!simulation_stopped(coder->sim))
 	{
-		take_dongles(coder);
-
+		if (!take_dongles(coder))
+			break ;
 		compile(coder);
 		release_dongles(coder);
-
 		debug(coder);
 		refactor(coder);
 	}
