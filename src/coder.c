@@ -31,7 +31,7 @@ static void	get_dongle_order(t_coder *coder,
 static int	lock_first_dongle(t_coder *coder, pthread_mutex_t *first)
 {
 	pthread_mutex_lock(first);
-	log_action(coder, "has taken a dongle");
+	//log_action(coder, "has taken a dongle");
 	if (simulation_stopped(coder->sim))
 	{
 		pthread_mutex_unlock(first);
@@ -51,18 +51,23 @@ int	take_dongles(t_coder *coder)
 	if (!lock_first_dongle(coder, first))
 		return (0);
 	pthread_mutex_lock(second);
-	log_action(coder, "has taken a dongle");
+	//log_action(coder, "has taken a dongle");
 	if (simulation_stopped(coder->sim))
 	{
 		pthread_mutex_unlock(second);
 		pthread_mutex_unlock(first);
 		return (0);
 	}
+	coder->has_dongles = 1;
+	log_action(coder, "has taken a dongle");
+	log_action(coder, "has taken a dongle");
 	return (1);
 }
 
 void	release_dongles(t_coder *coder)
 {
+	if (!coder->has_dongles)
+		return ;
 	if (coder->left_dongle < coder->right_dongle)
 	{
 		pthread_mutex_unlock(&coder->right_dongle->mutex);
@@ -73,6 +78,7 @@ void	release_dongles(t_coder *coder)
 		pthread_mutex_unlock(&coder->left_dongle->mutex);
 		pthread_mutex_unlock(&coder->right_dongle->mutex);
 	}
+	coder->has_dongles = 0;
 }
 
 void	compile(t_coder *coder)

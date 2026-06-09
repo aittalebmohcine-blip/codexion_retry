@@ -24,14 +24,15 @@ static void	init_coders(t_simulation *sim)
 	int	i;
 	int	n;
 
-	i = 0;
 	n = sim->config.number_of_coders;
+	i = 0;
 	while (i < n)
 	{
 		sim->coders[i].id = i + 1;
 		sim->coders[i].sim = sim;
 		sim->coders[i].left_dongle = &sim->dongles[i];
 		sim->coders[i].right_dongle = &sim->dongles[(i + 1) % n];
+		sim->coders[i].has_dongles = 0;
 		i++;
 	}
 }

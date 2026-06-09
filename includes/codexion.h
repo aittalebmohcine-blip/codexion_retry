@@ -45,6 +45,9 @@ typedef struct s_coder
 
 	t_dongle	*left_dongle;
 	t_dongle	*right_dongle;
+
+	int	has_dongles;
+
 	t_coder_state	state;
 
 	struct s_simulation	*sim;
