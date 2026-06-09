@@ -94,6 +94,9 @@ void	compile(t_coder *coder)
 	set_state(coder, STATE_COMPILING);
 	smart_sleep(coder->sim,
 		coder->sim->config.time_to_compile);
+	if (simulation_stopped(coder->sim))
+		return ;
+	coder->compiles_done++;
 }
 
 void	debug(t_coder *coder)
