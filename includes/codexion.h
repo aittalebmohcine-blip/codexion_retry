@@ -10,9 +10,12 @@
 
 typedef enum e_coder_state
 {
+	STATE_IDLE,
 	STATE_COMPILING,
 	STATE_DEBUGGING,
-	STATE_REFACTORING
+	STATE_REFACTORING,
+	STATE_BURNED_OUT,
+	STATE_DONE
 }	t_coder_state;
 
 typedef enum e_scheduler
@@ -53,6 +56,8 @@ typedef struct s_coder
 	struct s_simulation	*sim;
 
 	long long	last_compile_time_ms;
+
+	int	compiles_done;
 }	t_coder;
 
 typedef struct s_simulation

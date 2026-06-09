@@ -45,6 +45,8 @@ int	take_dongles(t_coder *coder)
 	pthread_mutex_t	*first;
 	pthread_mutex_t	*second;
 
+	//coder should not aquire any dongle anless he can explecitly take both left and right
+	//maybe check if coder allready has dongles beffore taking
 	if (coder->left_dongle == coder->right_dongle)
 		return (0);
 	get_dongle_order(coder, &first, &second);
