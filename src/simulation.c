@@ -33,6 +33,7 @@ static void	init_coders(t_simulation *sim)
 		sim->coders[i].left_dongle = &sim->dongles[i];
 		sim->coders[i].right_dongle = &sim->dongles[(i + 1) % n];
 		sim->coders[i].has_dongles = 0;
+    sim->coders[i].state = STATE_IDLE;
 		i++;
 	}
 }
