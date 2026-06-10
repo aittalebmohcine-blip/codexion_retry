@@ -34,6 +34,7 @@ static void	init_coders(t_simulation *sim)
 		sim->coders[i].right_dongle = &sim->dongles[(i + 1) % n];
 		sim->coders[i].has_dongles = 0;
     sim->coders[i].state = STATE_IDLE;
+    sim->coders[i].last_compile_time_ms = 0;
 		i++;
 	}
 }
@@ -57,9 +58,10 @@ static int	alloc_simulation(t_simulation *sim)
 
 int	init_simulation(t_simulation *sim, t_config *config)
 {
+  pthread_mutex_init(&sim->sim_mutex, NULL);
 	pthread_mutex_init(&sim->stop_mutex, NULL);
+  pthread_mutex_init(&sim->log_mutex, NULL);
 	sim->should_stop = 0;
-	pthread_mutex_init(&sim->log_mutex, NULL);
 	if (!sim || !config)
 		return (0);
 	sim->config = *config;
@@ -74,6 +76,7 @@ int	init_simulation(t_simulation *sim, t_config *config)
 		return (0);
 	}
 	init_coders(sim);
+  sim->done_coders = 0;
 	return (1);
 }
 

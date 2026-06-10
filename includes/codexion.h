@@ -72,6 +72,10 @@ typedef struct s_simulation
 
 	int	should_stop;
 	pthread_mutex_t	stop_mutex;
+
+  int	done_coders;
+
+	pthread_mutex_t	sim_mutex;
 }	t_simulation;
 
 void	*monitor_routine(void *arg);
@@ -87,9 +91,14 @@ void	log_action(t_coder *coder, char *msg);
 int	take_dongles(t_coder *coder);
 void	release_dongles(t_coder *coder);
 
-void	compile(t_coder *coder);
+int	compile(t_coder *coder);
 void	debug(t_coder *coder);
 void	refactor(t_coder *coder);
+
+int	coder_is_done(t_coder *coder);
+void	mark_coder_done(t_coder *coder);
+
+void	set_state(t_coder *coder, t_coder_state state);
 ///
 
 int		init_simulation(t_simulation *sim, t_config *config);

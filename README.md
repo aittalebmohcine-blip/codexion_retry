@@ -49,3 +49,7 @@ TRANSITIONS
 NEW STATE
 
 This is the foundation.
+
+
+---
+- coders state is shared between threads, it needs protection.
