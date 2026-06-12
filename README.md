@@ -53,3 +53,5 @@ This is the foundation.
 
 ---
 - coders state is shared between threads, it needs protection.
+- destroy_simulation() is not implemented.
+- makefile does not rebuild when there is change in a header file.

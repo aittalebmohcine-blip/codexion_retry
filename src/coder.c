@@ -1,86 +1,25 @@
-#include "../includes/codexion.h"
-#include <pthread.h>
+#include "../includes/coder.h"
+#include "../includes/simulation.h"
+#include "../includes/dongle.h"
 
-void	set_state(t_coder *coder, t_coder_state state)
+void	init_coders(t_simulation *sim)
 {
-	coder->state = state;
-	if (state == STATE_COMPILING)
-		log_action(coder, "is compiling");
-	else if (state == STATE_DEBUGGING)
-		log_action(coder, "is debugging");
-	else if (state == STATE_REFACTORING)
-		log_action(coder, "is refactoring");
-}
+	int	i;
+	int	n;
 
-static void	get_dongle_order(t_coder *coder,
-	pthread_mutex_t **first,
-	pthread_mutex_t **second)
-{
-	if (coder->left_dongle < coder->right_dongle)
+	n = sim->config.number_of_coders;
+	i = 0;
+	while (i < n)
 	{
-		*first = &coder->left_dongle->mutex;
-		*second = &coder->right_dongle->mutex;
+		sim->coders[i].id = i + 1;
+		sim->coders[i].sim = sim;
+		sim->coders[i].left_dongle = &sim->dongles[i];
+		sim->coders[i].right_dongle = &sim->dongles[(i + 1) % n];
+		sim->coders[i].has_dongles = 0;
+    sim->coders[i].state = STATE_IDLE;
+    sim->coders[i].last_compile_time_ms = 0;
+		i++;
 	}
-	else
-	{
-		*first = &coder->right_dongle->mutex;
-		*second = &coder->left_dongle->mutex;
-	}
-}
-
-static int	lock_first_dongle(t_coder *coder, pthread_mutex_t *first)
-{
-	pthread_mutex_lock(first);
-	//log_action(coder, "has taken a dongle");
-	if (simulation_stopped(coder->sim))
-	{
-		pthread_mutex_unlock(first);
-		return (0);
-	}
-	return (1);
-}
-
-int	take_dongles(t_coder *coder)
-{
-	pthread_mutex_t	*first;
-	pthread_mutex_t	*second;
-
-	//coder should not aquire any dongle anless he can explecitly take both left and right
-	//maybe check if coder allready has dongles beffore taking
-	if (coder->left_dongle == coder->right_dongle)
-		return (0);
-	get_dongle_order(coder, &first, &second);
-	if (!lock_first_dongle(coder, first))
-		return (0);
-	pthread_mutex_lock(second);
-	//log_action(coder, "has taken a dongle");
-	if (simulation_stopped(coder->sim))
-	{
-		pthread_mutex_unlock(second);
-		pthread_mutex_unlock(first);
-		return (0);
-	}
-	coder->has_dongles = 1;
-	log_action(coder, "has taken a dongle");
-	log_action(coder, "has taken a dongle");
-	return (1);
-}
-
-void	release_dongles(t_coder *coder)
-{
-	if (!coder->has_dongles)
-		return ;
-	if (coder->left_dongle < coder->right_dongle)
-	{
-		pthread_mutex_unlock(&coder->right_dongle->mutex);
-		pthread_mutex_unlock(&coder->left_dongle->mutex);
-	}
-	else
-	{
-		pthread_mutex_unlock(&coder->left_dongle->mutex);
-		pthread_mutex_unlock(&coder->right_dongle->mutex);
-	}
-	coder->has_dongles = 0;
 }
 
 int	compile(t_coder *coder)
@@ -121,6 +60,44 @@ void	refactor(t_coder *coder)
 		coder->sim->config.time_to_refactor);
 }
 
+int	coder_is_done(t_coder *coder)
+{
+	if (coder->sim->config.number_of_compiles_required <= 0)
+		return (0);
+	return (coder->compiles_done
+		>= coder->sim->config.number_of_compiles_required);
+}
+
+void	mark_coder_done(t_coder *coder)
+{
+	pthread_mutex_lock(&coder->sim->sim_mutex);
+	coder->sim->done_coders++;
+	pthread_mutex_unlock(&coder->sim->sim_mutex);
+}
+
+void	set_state(t_coder *coder, t_coder_state state)
+{
+	coder->state = state;
+	if (state == STATE_COMPILING)
+		log_action(coder, "is compiling");
+	else if (state == STATE_DEBUGGING)
+		log_action(coder, "is debugging");
+	else if (state == STATE_REFACTORING)
+		log_action(coder, "is refactoring");
+}
+
+void	log_action(t_coder *coder, char *msg)
+{
+	pthread_mutex_lock(&coder->sim->log_mutex);
+
+	printf("%lld %d %s\n",
+		get_sim_time(coder->sim),
+		coder->id,
+		msg);
+
+	pthread_mutex_unlock(&coder->sim->log_mutex);
+}
+
 void	*coder_routine(void *arg)
 {
 	t_coder	*coder;
@@ -140,31 +117,4 @@ void	*coder_routine(void *arg)
   	refactor(coder);
   }
 	return (NULL);
-}
-
-void	log_action(t_coder *coder, char *msg)
-{
-	pthread_mutex_lock(&coder->sim->log_mutex);
-
-	printf("%lld %d %s\n",
-		get_sim_time(coder->sim),
-		coder->id,
-		msg);
-
-	pthread_mutex_unlock(&coder->sim->log_mutex);
-}
-
-int	coder_is_done(t_coder *coder)
-{
-	if (coder->sim->config.number_of_compiles_required <= 0)
-		return (0);
-	return (coder->compiles_done
-		>= coder->sim->config.number_of_compiles_required);
-}
-
-void	mark_coder_done(t_coder *coder)
-{
-	pthread_mutex_lock(&coder->sim->sim_mutex);
-	coder->sim->done_coders++;
-	pthread_mutex_unlock(&coder->sim->sim_mutex);
 }

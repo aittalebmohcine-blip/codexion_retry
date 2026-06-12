@@ -1,5 +1,28 @@
-#include "../includes/codexion.h"
-#include <stdio.h>
+#include "../includes/monitor.h"
+#include "../includes/simulation.h"
+#include "../includes/coder.h"
+
+static int	check_burnouts(t_simulation *sim);
+static int	all_coders_done(t_simulation *sim);
+
+void	*monitor_routine(void *arg)
+{
+	t_simulation	*sim;
+
+	sim = (t_simulation *)arg;
+	while (!simulation_stopped(sim))
+	{
+		if (check_burnouts(sim))
+			return (NULL);
+		if (all_coders_done(sim))
+		{
+			stop_simulation(sim);
+			return (NULL);
+		}
+		usleep(1000);
+	}
+	return (NULL);
+}
 
 static int	all_coders_done(t_simulation *sim)
 {
@@ -33,23 +56,4 @@ static int	check_burnouts(t_simulation *sim)
 		i++;
 	}
 	return (0);
-}
-
-void	*monitor_routine(void *arg)
-{
-	t_simulation	*sim;
-
-	sim = (t_simulation *)arg;
-	while (!simulation_stopped(sim))
-	{
-		if (check_burnouts(sim))
-			return (NULL);
-		if (all_coders_done(sim))
-		{
-			stop_simulation(sim);
-			return (NULL);
-		}
-		usleep(1000);
-	}
-	return (NULL);
 }

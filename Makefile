@@ -14,11 +14,12 @@ INC_DIR     = includes
 
 # --- Source Files ---
 SRCS        = $(SRC_DIR)/main.c \
-              $(SRC_DIR)/utils.c \
 							$(SRC_DIR)/simulation.c \
               $(SRC_DIR)/coder.c \
 							$(SRC_DIR)/monitor.c \
-#              $(SRC_DIR)/dongle.c \
+              $(SRC_DIR)/dongle.c \
+              $(SRC_DIR)/parse_config.c \
+#              $(SRC_DIR)/utils.c \
 #              $(SRC_DIR)/scheduler.c \
 
 # --- Object Files (maps src/*.c to obj/*.o) ---

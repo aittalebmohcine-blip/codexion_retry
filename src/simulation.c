@@ -1,60 +1,9 @@
-#include "../includes/codexion.h"
+#include "../includes/simulation.h"
+#include "../includes/coder.h"
+#include "../includes/dongle.h"
+#include "../includes/monitor.h"
 
-long long	get_sim_time(t_simulation *sim)
-{
-	return (get_time_ms() - sim->start_time_ms);
-}
-
-static int	init_dongles(t_simulation *sim)
-{
-	int	i;
-
-	i = 0;
-	while (i < sim->config.number_of_coders)
-	{
-		if (pthread_mutex_init(&sim->dongles[i].mutex, NULL) != 0)
-			return (0);
-		i++;
-	}
-	return (1);
-}
-
-static void	init_coders(t_simulation *sim)
-{
-	int	i;
-	int	n;
-
-	n = sim->config.number_of_coders;
-	i = 0;
-	while (i < n)
-	{
-		sim->coders[i].id = i + 1;
-		sim->coders[i].sim = sim;
-		sim->coders[i].left_dongle = &sim->dongles[i];
-		sim->coders[i].right_dongle = &sim->dongles[(i + 1) % n];
-		sim->coders[i].has_dongles = 0;
-    sim->coders[i].state = STATE_IDLE;
-    sim->coders[i].last_compile_time_ms = 0;
-		i++;
-	}
-}
-
-static int	alloc_simulation(t_simulation *sim)
-{
-	int	n;
-
-	n = sim->config.number_of_coders;
-	sim->coders = malloc(sizeof(t_coder) * n);
-	if (!sim->coders)
-		return (0);
-	sim->dongles = malloc(sizeof(t_dongle) * n);
-	if (!sim->dongles)
-	{
-		free(sim->coders);
-		return (0);
-	}
-	return (1);
-}
+static int	alloc_simulation(t_simulation *sim);
 
 int	init_simulation(t_simulation *sim, t_config *config)
 {
@@ -114,6 +63,24 @@ void	wait_simulation(t_simulation *sim)
 	pthread_join(sim->monitor_thread, NULL);
 }
 
+long long	get_sim_time(t_simulation *sim)
+{
+	return (get_time_ms() - sim->start_time_ms);
+}
+
+void	smart_sleep(t_simulation *sim, long long duration_ms)
+{
+	long long	start;
+
+	start = get_time_ms();
+	while (!simulation_stopped(sim))
+	{
+		if (get_time_ms() - start >= duration_ms)
+			break ;
+		usleep(500);
+	}
+}
+
 int	simulation_stopped(t_simulation *sim)
 {
 	int	value;
@@ -130,3 +97,23 @@ void	stop_simulation(t_simulation *sim)
 	sim->should_stop = 1;
 	pthread_mutex_unlock(&sim->stop_mutex);
 }
+
+static int	alloc_simulation(t_simulation *sim)
+{
+	int	n;
+
+	n = sim->config.number_of_coders;
+	sim->coders = malloc(sizeof(t_coder) * n);
+	if (!sim->coders)
+		return (0);
+	sim->dongles = malloc(sizeof(t_dongle) * n);
+	if (!sim->dongles)
+	{
+		free(sim->coders);
+		return (0);
+	}
+	return (1);
+}
+
+
+

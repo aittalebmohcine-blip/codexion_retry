@@ -1,4 +1,4 @@
-#include "../includes/codexion.h"
+#include "../includes/simulation.h"
 
 /* ENTRY POINT */
 int	main(int argc, char **argv)
