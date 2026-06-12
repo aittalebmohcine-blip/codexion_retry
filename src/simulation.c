@@ -63,6 +63,25 @@ void	wait_simulation(t_simulation *sim)
 	pthread_join(sim->monitor_thread, NULL);
 }
 
+void	destroy_simulation(t_simulation *sim)
+{
+	int	i;
+
+	i = 0;
+	while (i < sim->config.number_of_coders)
+	{
+		pthread_mutex_destroy(&sim->dongles[i].mutex);
+		//pthread_cond_destroy(&sim->dongles[i].cond);
+		//heap_destroy(&sim->dongles[i].waiters);
+		i++;
+	}
+	free(sim->coders);
+	free(sim->dongles);
+	pthread_mutex_destroy(&sim->sim_mutex);
+	pthread_mutex_destroy(&sim->stop_mutex);
+	pthread_mutex_destroy(&sim->log_mutex);
+}
+
 long long	get_sim_time(t_simulation *sim)
 {
 	return (get_time_ms() - sim->start_time_ms);

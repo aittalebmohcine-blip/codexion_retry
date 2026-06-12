@@ -14,5 +14,6 @@ int	main(int argc, char **argv)
 	if (!start_simulation(&sim))
 		return (1);
 	wait_simulation(&sim);
+	destroy_simulation(&sim);
 	return (0);
 }
