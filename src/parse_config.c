@@ -18,9 +18,9 @@ int	parse_arguments(int argc, char **argv, t_config *config)
 		|| !parse_int_field(argv[7], &config->dongle_cooldown, 0))
 		return (print_error("Invalid integer argument."), 0);
 	if (strcmp(argv[8], "fifo") == 0)
-		config->scheduler = SCHEDULER_FIFO;
+		config->scheduler_type = SCHEDULER_FIFO;
 	else if (strcmp(argv[8], "edf") == 0)
-		config->scheduler = SCHEDULER_EDF;
+		config->scheduler_type = SCHEDULER_EDF;
 	else
 		return (print_error("Invalid scheduler. Use 'fifo' or 'edf'."), 0);
 	return (1);

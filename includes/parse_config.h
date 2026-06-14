@@ -6,11 +6,11 @@
 #include <string.h>
 #include <stdlib.h>
 
-typedef enum e_scheduler
+typedef enum e_scheduler_type
 {
 	SCHEDULER_FIFO,
 	SCHEDULER_EDF
-}	t_scheduler;
+}	t_scheduler_type;
 
 typedef struct s_config
 {
@@ -21,7 +21,7 @@ typedef struct s_config
 	int		time_to_refactor;
 	int		number_of_compiles_required;
 	int		dongle_cooldown;
-	t_scheduler	scheduler;
+	t_scheduler_type	scheduler_type;
 }	t_config;
 
 int	parse_arguments(int argc, char **argv, t_config *config);
