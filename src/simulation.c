@@ -4,28 +4,36 @@
 #include "../includes/monitor.h"
 
 static int	alloc_simulation(t_simulation *sim);
+static void	init_simulation_state(t_simulation *sim, t_config *config);
+static int	init_simulation_mutexes(t_simulation *sim);
+static void	destroy_simulation_mutexes(t_simulation *sim);
+static int	alloc_and_init_resources(t_simulation *sim);
 
 int	init_simulation(t_simulation *sim, t_config *config)
 {
-  pthread_mutex_init(&sim->sim_mutex, NULL);
-	pthread_mutex_init(&sim->stop_mutex, NULL);
-  pthread_mutex_init(&sim->log_mutex, NULL);
-	sim->should_stop = 0;
 	if (!sim || !config)
 		return (0);
-	sim->config = *config;
-	sim->coders = NULL;
-	sim->dongles = NULL;
-	if (!alloc_simulation(sim))
+	
+	init_simulation_state(sim, config);
+	
+	if (!init_simulation_mutexes(sim))
 		return (0);
-	if (!init_dongles(sim))
+	
+	/* 1. Allocate resources FIRST so scheduler can depend on them */
+	if (!alloc_and_init_resources(sim))
 	{
-		free(sim->coders);
-		free(sim->dongles);
+		destroy_simulation_mutexes(sim);
 		return (0);
 	}
-	init_coders(sim);
-  sim->done_coders = 0;
+	
+	/* 2. Initialize scheduler AFTER coders and dongles are allocated */
+	if (!init_scheduler(sim))
+	{
+		destroy_simulation_mutexes(sim);
+		//todo: add your destroy_resources(sim) cleanup here if you have one */
+		return (0);
+	}
+	
 	return (1);
 }
 
@@ -77,9 +85,7 @@ void	destroy_simulation(t_simulation *sim)
 	}
 	free(sim->coders);
 	free(sim->dongles);
-	pthread_mutex_destroy(&sim->sim_mutex);
-	pthread_mutex_destroy(&sim->stop_mutex);
-	pthread_mutex_destroy(&sim->log_mutex);
+	destroy_simulation_mutexes(sim);
 }
 
 long long	get_sim_time(t_simulation *sim)
@@ -134,5 +140,50 @@ static int	alloc_simulation(t_simulation *sim)
 	return (1);
 }
 
+static void	init_simulation_state(t_simulation *sim, t_config *config)
+{
+	sim->config = *config;
+	sim->coders = NULL;
+	sim->dongles = NULL;
+	sim->should_stop = 0;
+	sim->done_coders = 0;
+}
 
+static int	init_simulation_mutexes(t_simulation *sim)
+{
+	if (pthread_mutex_init(&sim->sim_mutex, NULL) != 0)
+		return (0);
+	if (pthread_mutex_init(&sim->stop_mutex, NULL) != 0)
+	{
+		pthread_mutex_destroy(&sim->sim_mutex);
+		return (0);
+	}
+	if (pthread_mutex_init(&sim->log_mutex, NULL) != 0)
+	{
+		pthread_mutex_destroy(&sim->sim_mutex);
+		pthread_mutex_destroy(&sim->stop_mutex);
+		return (0);
+	}
+	return (1);
+}
 
+static void	destroy_simulation_mutexes(t_simulation *sim)
+{
+	pthread_mutex_destroy(&sim->log_mutex);
+	pthread_mutex_destroy(&sim->stop_mutex);
+	pthread_mutex_destroy(&sim->sim_mutex);
+}
+
+static int	alloc_and_init_resources(t_simulation *sim)
+{
+	if (!alloc_simulation(sim))
+		return (0);
+	if (!init_dongles(sim))
+	{
+		free(sim->coders);
+		free(sim->dongles);
+		return (0);
+	}
+	init_coders(sim);
+	return (1);
+}
