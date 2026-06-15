@@ -1,3 +1,20 @@
+Working on:
+	- bug: one coder is working at a time.
+
+To do:
+	- fix: scheduler max_coders should be dynamic instead of macro.
+	- remove dongle mutex.
+	- remove take_dongles() and release_dongles().
+	- init_dongles(): mutex initialization failure in the middle is not handled.
+	- makefile does not rebuild when there is change in a header file.
+
+
+
+
+
+-------------------------------------
+
+-------------------------------------
 # codexion_retry
 
 **Golden rule:** everything should be encapsulated. We will use t_simulation context struct passed to all threads.
@@ -52,6 +69,3 @@ This is the foundation.
 
 
 ---
-- coders state is shared between threads, it needs protection.
-- destroy_simulation() is not implemented.
-- makefile does not rebuild when there is change in a header file.
