@@ -27,12 +27,12 @@ int	init_simulation(t_simulation *sim, t_config *config)
 	}
 	
 	/* 2. Initialize scheduler AFTER coders and dongles are allocated */
-	if (!init_scheduler(sim))
-	{
-		destroy_simulation_mutexes(sim);
-		//todo: add your destroy_resources(sim) cleanup here if you have one */
-		return (0);
-	}
+	//if (!init_scheduler(sim))
+	//{
+	//	destroy_simulation_mutexes(sim);
+	//	//todo: add your destroy_resources(sim) cleanup here if you have one */
+	//	return (0);
+	//}
 	
 	return (1);
 }
