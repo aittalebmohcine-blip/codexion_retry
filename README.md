@@ -1,5 +1,7 @@
 Working on:
-	- bug: one coder is working at a time.
+  - stress testing.
+  - implementing heap.
+  - barrier
 
 To do:
 	- fix: scheduler max_coders should be dynamic instead of macro.
