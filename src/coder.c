@@ -12,20 +12,16 @@ void	init_coders(t_simulation *sim)
 	while (i < n)
 	{
 		sim->coders[i].id = i + 1;
+		sim->coders[i].sim = sim;
 
+    sim->coders[i].state = STATE_IDLE;
+    sim->coders[i].last_compile_time_ms = 0;
+    sim->coders[i].compiles_done = 0;
 
 		sim->coders[i].left_dongle = &sim->dongles[i];
 		sim->coders[i].right_dongle = &sim->dongles[(i + 1) % n];
-
 		sim->coders[i].has_dongles = 0;
 
-    sim->coders[i].state = STATE_IDLE;
-
-		sim->coders[i].sim = sim;
-
-    sim->coders[i].last_compile_time_ms = 0;
-
-    sim->coders[i].compiles_done = 0;
 		i++;
 	}
 }

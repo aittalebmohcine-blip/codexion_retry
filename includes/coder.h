@@ -18,21 +18,18 @@ typedef struct s_simulation t_simulation;
 
 typedef struct s_coder
 {
+  pthread_t			thread;
+
 	int					id;
-	pthread_t			thread;
+	struct s_simulation	*sim;
+
+	t_coder_state	state;
+	long long	last_compile_time_ms;
+	int	compiles_done;
 
 	t_dongle	*left_dongle;
 	t_dongle	*right_dongle;
-
 	int	has_dongles;
-
-	t_coder_state	state;
-
-	struct s_simulation	*sim;
-
-	long long	last_compile_time_ms;
-
-	int	compiles_done;
 }	t_coder;
 
 void	init_coders(t_simulation *sim);

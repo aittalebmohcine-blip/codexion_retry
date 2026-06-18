@@ -9,6 +9,7 @@ typedef struct s_simulation t_simulation;
 typedef struct s_dongle
 {
 	pthread_mutex_t	mutex;
+	int	available;
 }	t_dongle;
 
 int	init_dongles(t_simulation *sim);
