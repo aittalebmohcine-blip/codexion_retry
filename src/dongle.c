@@ -13,9 +13,10 @@ int	init_dongles(t_simulation *sim)
 	i = 0;
 	while (i < sim->config.number_of_coders)
 	{
-		sim->dongles[i].available = 1;
 		if (pthread_mutex_init(&sim->dongles[i].mutex, NULL) != 0)
 			return (0);
+		sim->dongles[i].waiters.size = 0;
+		sim->dongles[i].available = 1;
 		i++;
 	}
 	return (1);
