@@ -1,9 +1,10 @@
 Working on:
-  - stress testing.
-  - implementing heap.
-  - barrier
+  - copilot analysis
 
 To do:
+	- implementing heap.
+	- stress testing.
+	- barrier
 	- the heap is static, search if it should be dynamic (malloc).
 	- fix: scheduler max_coders should be dynamic instead of macro.
 	- remove dongle mutex.
