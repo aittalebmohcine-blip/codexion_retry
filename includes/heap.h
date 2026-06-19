@@ -18,4 +18,5 @@ typedef struct s_heap
 void	heap_remove_top(t_heap *heap);
 void	heap_insert(t_heap *heap, t_request *request);
 int	request_before(t_request *a, t_request *b);
+t_request	*heap_top(t_heap *heap);
 #endif
