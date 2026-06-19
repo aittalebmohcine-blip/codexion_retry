@@ -1,6 +1,7 @@
 #ifndef CODER_H
 # define CODER_H
 
+#include "heap.h"
 #include <pthread.h>
 
 typedef enum e_coder_state
@@ -30,6 +31,9 @@ typedef struct s_coder
 	t_dongle	*left_dongle;
 	t_dongle	*right_dongle;
 	int	has_dongles;
+
+	t_request	request;
+	int	requested;
 }	t_coder;
 
 void	init_coders(t_simulation *sim);

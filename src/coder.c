@@ -22,6 +22,9 @@ void	init_coders(t_simulation *sim)
 		sim->coders[i].right_dongle = &sim->dongles[(i + 1) % n];
 		sim->coders[i].has_dongles = 0;
 
+		sim->coders[i].request.coder = &sim->coders[i];
+		sim->coders[i].request.priority = 0;
+		sim->coders[i].requested = 0;
 		i++;
 	}
 }
