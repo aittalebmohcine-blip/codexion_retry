@@ -28,11 +28,13 @@ int	take_dongles(t_coder *coder)
 		return (0);
 
 	if (coder->id % 2 == 0)
-		smart_sleep(coder->sim, coder->sim->config.time_to_compile + coder->sim->config.dongle_cooldown / 4);
+		smart_sleep(coder->sim, (coder->sim->config.time_to_compile + coder->sim->config.dongle_cooldown) / 4);
 
 	//request_dongles();
 
 	while (!can_take(coder))
+		//use smart sleep for sim stop detection
+		//if sim stoped return
 		usleep(1000);
 
 	pthread_mutex_lock(&coder->right_dongle->mutex);
