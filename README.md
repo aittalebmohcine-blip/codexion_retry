@@ -4,6 +4,7 @@ Working on:
   - barrier
 
 To do:
+	- the heap is static, search if it should be dynamic (malloc).
 	- fix: scheduler max_coders should be dynamic instead of macro.
 	- remove dongle mutex.
 	- remove take_dongles() and release_dongles().
