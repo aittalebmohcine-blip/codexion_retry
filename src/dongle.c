@@ -5,6 +5,8 @@
 #include "../includes/simulation.h"
 
 static int	can_take(t_coder *coder);
+static void	lock_dongles(t_coder *coder);
+static void	unlock_dongles(t_coder *coder);
 
 int	init_dongles(t_simulation *sim)
 {
@@ -37,17 +39,13 @@ int	take_dongles(t_coder *coder)
 		//if sim stoped return
 		usleep(1000);
 
-	pthread_mutex_lock(&coder->right_dongle->mutex);
-	pthread_mutex_lock(&coder->left_dongle->mutex);
-
+	lock_dongles(coder);
 	coder->left_dongle->available = 0;
 	coder->right_dongle->available = 0;
 	coder->has_dongles = 1;
 	log_action(coder, "has taken a dongle");
 	log_action(coder, "has taken a dongle");
-
-	pthread_mutex_unlock(&coder->right_dongle->mutex);
-	pthread_mutex_unlock(&coder->left_dongle->mutex);
+	unlock_dongles(coder);
 	return (1);
 }
 
@@ -55,28 +53,50 @@ void	release_dongles(t_coder *coder)
 {
 	if (!coder->has_dongles)
 		return ;
-	pthread_mutex_lock(&coder->right_dongle->mutex);
-	pthread_mutex_lock(&coder->left_dongle->mutex);
+	lock_dongles(coder);
 	coder->left_dongle->available = 1;
 	coder->right_dongle->available = 1;
 	coder->has_dongles = 0;
-	pthread_mutex_unlock(&coder->right_dongle->mutex);
-	pthread_mutex_unlock(&coder->left_dongle->mutex);
+	unlock_dongles(coder);
 }
 
 
 static int	can_take(t_coder *coder)
 {
-	pthread_mutex_lock(&coder->right_dongle->mutex);
-	pthread_mutex_lock(&coder->left_dongle->mutex);
-
+	lock_dongles(coder);
 	if (!coder->left_dongle->available || !coder->right_dongle->available)
+	{
+		unlock_dongles(coder);
+		return (0);
+	}
+	unlock_dongles(coder);
+	return (1);
+}
+
+static void	lock_dongles(t_coder *coder)
+{
+	if (coder->left_dongle < coder->right_dongle)
+	{
+		pthread_mutex_lock(&coder->left_dongle->mutex);
+		pthread_mutex_lock(&coder->right_dongle->mutex);
+	}
+	else
+	{
+		pthread_mutex_lock(&coder->right_dongle->mutex);
+		pthread_mutex_lock(&coder->left_dongle->mutex);
+	}
+}
+
+static void	unlock_dongles(t_coder *coder)
+{
+	if (coder->left_dongle < coder->right_dongle)
 	{
 		pthread_mutex_unlock(&coder->right_dongle->mutex);
 		pthread_mutex_unlock(&coder->left_dongle->mutex);
-		return (0);
 	}
-	pthread_mutex_unlock(&coder->right_dongle->mutex);
-	pthread_mutex_unlock(&coder->left_dongle->mutex);
-	return (1);
+	else
+	{
+		pthread_mutex_unlock(&coder->left_dongle->mutex);
+		pthread_mutex_unlock(&coder->right_dongle->mutex);
+	}
 }
