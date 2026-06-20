@@ -26,14 +26,6 @@ int	init_simulation(t_simulation *sim, t_config *config)
 		return (0);
 	}
 	
-	/* 2. Initialize scheduler AFTER coders and dongles are allocated */
-	//if (!init_scheduler(sim))
-	//{
-	//	destroy_simulation_mutexes(sim);
-	//	//todo: add your destroy_resources(sim) cleanup here if you have one */
-	//	return (0);
-	//}
-	
 	return (1);
 }
 
@@ -79,8 +71,6 @@ void	destroy_simulation(t_simulation *sim)
 	while (i < sim->config.number_of_coders)
 	{
 		pthread_mutex_destroy(&sim->dongles[i].mutex);
-		//pthread_cond_destroy(&sim->dongles[i].cond);
-		//heap_destroy(&sim->dongles[i].waiters);
 		i++;
 	}
 	free(sim->coders);
