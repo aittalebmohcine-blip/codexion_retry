@@ -33,12 +33,9 @@ int	take_dongles(t_coder *coder)
 	if (coder->id % 2 == 0)
 		smart_sleep(coder->sim, (coder->sim->config.time_to_compile + coder->sim->config.dongle_cooldown) / 4);
 
-	//request_dongles();
 	add_request(coder);
 
 	while (!can_take(coder) && !simulation_stopped(coder->sim))
-		//use smart sleep for sim stop detection
-		//if sim stoped return
 		usleep(1000);
 	if (simulation_stopped(coder->sim))
 		return (0);
