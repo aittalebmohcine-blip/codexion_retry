@@ -1,7 +1,6 @@
 #ifndef SIMULATION_H
 # define SIMULATION_H
 
-//#include <pthread.h>
 #include "parse_config.h"
 
 typedef struct s_coder t_coder;
@@ -21,6 +20,9 @@ typedef struct s_simulation
 	pthread_mutex_t	stop_mutex;
 
   int	done_coders;
+
+	/* number of dongle mutexes successfully initialized */
+	int	initialized_dongles;
 
 	pthread_mutex_t	sim_mutex;
 

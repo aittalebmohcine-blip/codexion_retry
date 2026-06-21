@@ -83,7 +83,8 @@ void	destroy_simulation(t_simulation *sim)
 	if (sim->coders)
 	{
 		i = 0;
-		while (i < sim->config.number_of_coders)
+		/* only destroy the mutexes that were successfully initialized */
+		while (i < sim->initialized_dongles)
 		{
 			if (sim->dongles)
 				pthread_mutex_destroy(&sim->dongles[i].mutex);
@@ -155,6 +156,7 @@ static void	init_simulation_state(t_simulation *sim, t_config *config)
 	sim->dongles = NULL;
 	sim->should_stop = 0;
 	sim->done_coders = 0;
+	sim->initialized_dongles = 0;
 }
 
 static int	init_simulation_mutexes(t_simulation *sim)

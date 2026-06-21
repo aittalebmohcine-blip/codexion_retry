@@ -16,6 +16,9 @@ int	init_dongles(t_simulation *sim)
 	if (!sim || !sim->dongles || sim->config.number_of_coders <= 0)
 		return (0);
 
+	/* clear initialized count first */
+	sim->initialized_dongles = 0;
+
 	i = 0;
 	while (i < sim->config.number_of_coders)
 	{
@@ -28,12 +31,14 @@ int	init_dongles(t_simulation *sim)
 				pthread_mutex_destroy(&sim->dongles[j].mutex);
 				j++;
 			}
+			sim->initialized_dongles = 0;
 			return (0);
 		}
 		sim->dongles[i].waiters.size = 0;
 		sim->dongles[i].available = 1;
 		sim->dongles[i].next_available_time_ms = 0;
 		i++;
+		sim->initialized_dongles++;
 	}
 	return (1);
 }
