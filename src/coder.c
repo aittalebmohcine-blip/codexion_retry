@@ -33,7 +33,9 @@ int	compile(t_coder *coder)
 {
 	if (simulation_stopped(coder->sim))
 		return (0);
+	pthread_mutex_lock(&coder->sim->sim_mutex);
 	coder->last_compile_time_ms = get_sim_time(coder->sim);
+	pthread_mutex_unlock(&coder->sim->sim_mutex);
 	set_state(coder, STATE_COMPILING);
 	smart_sleep(coder->sim,
 		coder->sim->config.time_to_compile);
@@ -43,7 +45,7 @@ int	compile(t_coder *coder)
 	if (coder_is_done(coder))
 	{
 		set_state(coder, STATE_DONE);
-    mark_coder_done(coder);
+		mark_coder_done(coder);
 		return (0);
 	}
 	return (1);
@@ -84,7 +86,9 @@ void	mark_coder_done(t_coder *coder)
 
 void	set_state(t_coder *coder, t_coder_state state)
 {
+	pthread_mutex_lock(&coder->sim->sim_mutex);
 	coder->state = state;
+	pthread_mutex_unlock(&coder->sim->sim_mutex);
 	if (state == STATE_COMPILING)
 		log_action(coder, "is compiling");
 	else if (state == STATE_DEBUGGING)
