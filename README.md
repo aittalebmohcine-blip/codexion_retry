@@ -3,9 +3,11 @@ Working on:
 
 To do:
   - destortion.
+  - unused attrs.
   - thread creation
   - leaks.
   - heap size = 2
+  - priority by order of compiling times.
   - includes.
   - src code documentation.
   - norminette.
