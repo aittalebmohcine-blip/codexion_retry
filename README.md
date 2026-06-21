@@ -1,14 +1,9 @@
 Working on:
-  - copilot analysis
+  - organizing code.
 
 To do:
-	- implementing heap.
-	- stress testing.
-	- barrier
-	- the heap is static, search if it should be dynamic (malloc).
-	- fix: scheduler max_coders should be dynamic instead of macro.
-	- remove dongle mutex.
-	- remove take_dongles() and release_dongles().
+  - heap size = 2
+  - readme
 	- init_dongles(): mutex initialization failure in the middle is not handled.
 	- makefile does not rebuild when there is change in a header file.
 
@@ -17,6 +12,12 @@ To do:
 
 
 -------------------------------------
+significant changes to
+- dongle:
+    - update next_available_time_ms.
+    - replace heap_remove_top -> heap_remove_request.
+    - dongle cooldown filter -> can_take().
+
 
 -------------------------------------
 # codexion_retry
