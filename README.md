@@ -1,8 +1,14 @@
 Working on:
-  - organizing code.
+  - initialization.
 
 To do:
+  - destortion.
+  - thread creation
+  - leaks.
   - heap size = 2
+  - includes.
+  - src code documentation.
+  - norminette.
   - readme
 	- init_dongles(): mutex initialization failure in the middle is not handled.
 	- makefile does not rebuild when there is change in a header file.
