@@ -2,6 +2,7 @@
 #include "../includes/coder.h"
 #include "../includes/dongle.h"
 #include "../includes/monitor.h"
+#include <pthread.h>
 
 static int	alloc_simulation(t_simulation *sim);
 static void	init_simulation_state(t_simulation *sim, t_config *config);
@@ -154,6 +155,21 @@ static int	init_simulation_mutexes(t_simulation *sim)
 		pthread_mutex_destroy(&sim->stop_mutex);
 		return (0);
 	}
+	if (pthread_mutex_init(&sim->wait_mutex, NULL) != 0)
+	{
+		pthread_mutex_destroy(&sim->sim_mutex);
+		pthread_mutex_destroy(&sim->stop_mutex);
+		pthread_mutex_destroy(&sim->log_mutex);
+		return (0);
+	}
+	if (pthread_cond_init(&sim->wait_cond, NULL) != 0)
+	{
+		pthread_mutex_destroy(&sim->sim_mutex);
+		pthread_mutex_destroy(&sim->stop_mutex);
+		pthread_mutex_destroy(&sim->log_mutex);
+		pthread_mutex_destroy(&sim->wait_mutex);
+		return (0);
+	}
 	return (1);
 }
 
@@ -162,6 +178,8 @@ static void	destroy_simulation_mutexes(t_simulation *sim)
 	pthread_mutex_destroy(&sim->log_mutex);
 	pthread_mutex_destroy(&sim->stop_mutex);
 	pthread_mutex_destroy(&sim->sim_mutex);
+	pthread_mutex_destroy(&sim->wait_mutex);
+  pthread_cond_destroy(&sim->wait_cond);
 }
 
 static int	alloc_and_init_resources(t_simulation *sim)

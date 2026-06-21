@@ -23,6 +23,9 @@ typedef struct s_simulation
   int	done_coders;
 
 	pthread_mutex_t	sim_mutex;
+
+	pthread_mutex_t	wait_mutex;
+	pthread_cond_t	wait_cond;
 }	t_simulation;
 
 int		init_simulation(t_simulation *sim, t_config *config);
