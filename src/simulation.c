@@ -43,11 +43,19 @@ int	start_simulation(t_simulation *sim)
 				NULL,
 				coder_routine,
 				&sim->coders[i]))
+		{
+			sim->config.number_of_coders = i;
+			stop_simulation(sim);
 			return (0);
+		}
 		i++;
 	}
 	if (pthread_create(&sim->monitor_thread, NULL, monitor_routine, sim))
+	{
+		sim->config.number_of_coders = i;
+		stop_simulation(sim);
 		return (0);
+	}
 	return (1);
 }
 
@@ -58,24 +66,33 @@ void	wait_simulation(t_simulation *sim)
 	i = 0;
 	while (i < sim->config.number_of_coders)
 	{
-		pthread_join(sim->coders[i].thread, NULL);
+		if (pthread_join(sim->coders[i].thread, NULL) != 0)
+			perror("pthread_join (coder)");
 		i++;
 	}
-	pthread_join(sim->monitor_thread, NULL);
+	if (pthread_join(sim->monitor_thread, NULL) != 0)
+		perror("pthread_join (monitor)");
 }
 
 void	destroy_simulation(t_simulation *sim)
 {
 	int	i;
 
-	i = 0;
-	while (i < sim->config.number_of_coders)
+	if (!sim)
+		return ;
+	if (sim->coders)
 	{
-		pthread_mutex_destroy(&sim->dongles[i].mutex);
-		i++;
+		i = 0;
+		while (i < sim->config.number_of_coders)
+		{
+			if (sim->dongles)
+				pthread_mutex_destroy(&sim->dongles[i].mutex);
+			i++;
+		}
+		free(sim->coders);
 	}
-	free(sim->coders);
-	free(sim->dongles);
+	if (sim->dongles)
+		free(sim->dongles);
 	destroy_simulation_mutexes(sim);
 }
 
