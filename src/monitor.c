@@ -38,14 +38,19 @@ static int	all_coders_done(t_simulation *sim)
 static int	check_burnouts(t_simulation *sim)
 {
 	int	i;
+	int	state;
+	long long	last_compile_time_ms;
 
 	i = 0;
 	while (i < sim->config.number_of_coders)
 	{
-		//printf("%d coder has dongles: %d\n", i+1, sim->coders[i].has_dongles);
-		if (sim->coders[i].state != STATE_DONE
+		pthread_mutex_lock(&sim->sim_mutex);
+		state = sim->coders[i].state;
+		last_compile_time_ms = sim->coders[i].last_compile_time_ms;
+		pthread_mutex_unlock(&sim->sim_mutex);
+		if (state != STATE_DONE
 			&& get_sim_time(sim)
-			- sim->coders[i].last_compile_time_ms
+			- last_compile_time_ms
 			> sim->config.time_to_burnout)
 		{
 			stop_simulation(sim);
