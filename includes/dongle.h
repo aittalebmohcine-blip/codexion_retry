@@ -11,7 +11,8 @@ typedef struct s_dongle
 {
 	pthread_mutex_t	mutex;
 	int	available;
-	t_heap	waiters;
+  long long	next_available_time_ms;
+  t_heap	waiters;
 }	t_dongle;
 
 int	init_dongles(t_simulation *sim);
