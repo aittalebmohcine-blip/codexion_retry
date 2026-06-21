@@ -7,16 +7,25 @@ void	init_coders(t_simulation *sim)
 	int	i;
 	int	n;
 
+	if (!sim || !sim->coders || !sim->dongles)
+		return ;
+
 	n = sim->config.number_of_coders;
+	if (n <= 0)
+		return ;
+
+	/* clear allocated coders to avoid uninitialized data */
+	memset(sim->coders, 0, sizeof(sim->coders[0]) * n);
+
 	i = 0;
 	while (i < n)
 	{
 		sim->coders[i].id = i + 1;
 		sim->coders[i].sim = sim;
 
-    sim->coders[i].state = STATE_IDLE;
-    sim->coders[i].last_compile_time_ms = 0;
-    sim->coders[i].compiles_done = 0;
+		sim->coders[i].state = STATE_IDLE;
+		sim->coders[i].last_compile_time_ms = 0;
+		sim->coders[i].compiles_done = 0;
 
 		sim->coders[i].left_dongle = &sim->dongles[i];
 		sim->coders[i].right_dongle = &sim->dongles[(i + 1) % n];
