@@ -6,7 +6,7 @@
 /*   By: mait-tal <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/22 11:01:10 by mait-tal          #+#    #+#             */
-/*   Updated: 2026/06/22 11:01:11 by mait-tal         ###   ########.fr       */
+/*   Updated: 2026/06/22 21:23:08 by mait-tal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,8 @@ static int	all_coders_done(t_simulation *sim)
 
 static int	check_burnouts(t_simulation *sim)
 {
-	int	i;
-	int	state;
+	int			i;
+	int			state;
 	long long	last_compile_time_ms;
 
 	i = 0;
