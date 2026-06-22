@@ -1,7 +1,7 @@
 #ifndef HEAP_H
 # define HEAP_H
 
-#define MAX_CODERS 100
+#define MAX_CODERS 2
 
 typedef struct s_request
 {
