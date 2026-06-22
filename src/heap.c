@@ -6,7 +6,7 @@
 /*   By: mait-tal <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/22 11:01:01 by mait-tal          #+#    #+#             */
-/*   Updated: 2026/06/22 11:01:02 by mait-tal         ###   ########.fr       */
+/*   Updated: 2026/06/22 21:19:32 by mait-tal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	heap_remove_top(t_heap *heap)
 
 void	heap_remove_request(t_heap *heap, t_request *request)
 {
-	int i;
+	int	i;
 
 	if (heap->size == 0)
 		return ;
