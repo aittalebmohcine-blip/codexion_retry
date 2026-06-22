@@ -6,19 +6,21 @@
 /*   By: mait-tal <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/22 10:59:35 by mait-tal          #+#    #+#             */
-/*   Updated: 2026/06/22 10:59:47 by mait-tal         ###   ########.fr       */
+/*   Updated: 2026/06/22 11:14:44 by mait-tal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef HEAP_H
 # define HEAP_H
 
-#define MAX_CODERS 2
+# define MAX_CODERS 2
+
+typedef struct s_coder	t_coder;
 
 typedef struct s_request
 {
-	struct s_coder	*coder;
-	long long		priority;
+	t_coder		*coder;
+	long long	priority;
 }	t_request;
 
 typedef struct s_heap
@@ -27,9 +29,10 @@ typedef struct s_heap
 	int			size;
 }	t_heap;
 
-void	heap_remove_top(t_heap *heap);
-void	heap_remove_request(t_heap *heap, t_request *request);
-void	heap_insert(t_heap *heap, t_request *request);
-int	request_before(t_request *a, t_request *b);
-t_request	*heap_top(t_heap *heap);
+void			heap_remove_top(t_heap *heap);
+void			heap_remove_request(t_heap *heap, t_request *request);
+void			heap_insert(t_heap *heap, t_request *request);
+int				request_before(t_request *a, t_request *b);
+t_request		*heap_top(t_heap *heap);
+
 #endif

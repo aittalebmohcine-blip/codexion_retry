@@ -6,14 +6,14 @@
 /*   By: mait-tal <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/22 11:00:17 by mait-tal          #+#    #+#             */
-/*   Updated: 2026/06/22 11:00:19 by mait-tal         ###   ########.fr       */
+/*   Updated: 2026/06/22 11:15:11 by mait-tal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MONITOR_H
 # define MONITOR_H
 
-#include <unistd.h>
+# include <unistd.h>
 
 void	*monitor_routine(void *arg);
 

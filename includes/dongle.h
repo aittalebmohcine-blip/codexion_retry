@@ -6,7 +6,7 @@
 /*   By: mait-tal <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/22 10:59:30 by mait-tal          #+#    #+#             */
-/*   Updated: 2026/06/22 10:59:48 by mait-tal         ###   ########.fr       */
+/*   Updated: 2026/06/22 11:11:31 by mait-tal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,19 +16,19 @@
 # include "heap.h"
 # include <pthread.h>
 
-typedef struct s_coder t_coder;
-typedef struct s_simulation t_simulation;
+typedef struct s_coder		t_coder;
+typedef struct s_simulation	t_simulation;
 
 typedef struct s_dongle
 {
 	pthread_mutex_t	mutex;
-	int		available;
-	long long	next_available_time_ms;
-	t_heap		waiters;
-} 	t_dongle;
+	int				available;
+	long long		next_available_time_ms;
+	t_heap			waiters;
+}	t_dongle;
 
-int	init_dongles(t_simulation *sim);
-int	take_dongles(t_coder *coder);
+int		init_dongles(t_simulation *sim);
+int		take_dongles(t_coder *coder);
 void	release_dongles(t_coder *coder);
 
 #endif
