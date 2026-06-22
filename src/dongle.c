@@ -6,7 +6,7 @@
 /*   By: mait-tal <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/22 11:00:58 by mait-tal          #+#    #+#             */
-/*   Updated: 2026/06/22 11:00:59 by mait-tal         ###   ########.fr       */
+/*   Updated: 2026/06/22 11:39:12 by mait-tal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,35 +21,30 @@ static void	lock_dongles(t_coder *coder);
 static void	unlock_dongles(t_coder *coder);
 static void	add_request(t_coder *coder);
 
+static void	init_dongle(t_dongle *dongle);
+static void	destroy_initialized_dongles(t_dongle *dongles, int count);
+
+static void	handle_even_coder_sleep(t_coder *coder);
+static int	wait_for_dongles(t_coder *coder);
+static void	acquire_dongles(t_coder *coder);
+
 int	init_dongles(t_simulation *sim)
 {
-	int		i;
-	int		j;
+	int	i;
 
 	if (!sim || !sim->dongles || sim->config.number_of_coders <= 0)
 		return (0);
-
-	/* clear initialized count first */
 	sim->initialized_dongles = 0;
-
 	i = 0;
 	while (i < sim->config.number_of_coders)
 	{
 		if (pthread_mutex_init(&sim->dongles[i].mutex, NULL) != 0)
 		{
-			j = 0;
-			/* destroy any mutexes successfully initialized so far */
-			while (j < i)
-			{
-				pthread_mutex_destroy(&sim->dongles[j].mutex);
-				j++;
-			}
+			destroy_initialized_dongles(sim->dongles, i);
 			sim->initialized_dongles = 0;
 			return (0);
 		}
-		sim->dongles[i].waiters.size = 0;
-		sim->dongles[i].available = 1;
-		sim->dongles[i].next_available_time_ms = 0;
+		init_dongle(&sim->dongles[i]);
 		i++;
 		sim->initialized_dongles++;
 	}
@@ -58,36 +53,14 @@ int	init_dongles(t_simulation *sim)
 
 int	take_dongles(t_coder *coder)
 {
-	long long	sleep_delay;
-
 	if (coder->left_dongle == coder->right_dongle)
 		return (0);
-
 	if (coder->id % 2 == 0)
-	{
-		sleep_delay = coder->sim->config.time_to_compile
-			+ coder->sim->config.dongle_cooldown;
-		smart_sleep(coder->sim, sleep_delay / 4);
-	}
-
+		handle_even_coder_sleep(coder);
 	add_request(coder);
-
-	while (!simulation_stopped(coder->sim))
-	{
-		lock_dongles(coder);
-		if (can_take(coder))
-			break ;
-		unlock_dongles(coder);
-		usleep(1000);
-	}
-	if (simulation_stopped(coder->sim))
+	if (!wait_for_dongles(coder))
 		return (0);
-
-	coder->left_dongle->available = 0;
-	coder->right_dongle->available = 0;
-	coder->has_dongles = 1;
-	log_action(coder, "has taken a dongle");
-	log_action(coder, "has taken a dongle");
+	acquire_dongles(coder);
 	unlock_dongles(coder);
 	return (1);
 }
@@ -100,10 +73,8 @@ void	release_dongles(t_coder *coder)
 		return ;
 	now = get_sim_time(coder->sim);
 	lock_dongles(coder);
-	heap_remove_request(&coder->left_dongle->waiters,
-				&coder->request);
-	heap_remove_request(&coder->right_dongle->waiters,
-				&coder->request);
+	heap_remove_request(&coder->left_dongle->waiters, &coder->request);
+	heap_remove_request(&coder->right_dongle->waiters, &coder->request);
 	coder->requested = 0;
 	coder->left_dongle->available = 1;
 	coder->left_dongle->next_available_time_ms = now
@@ -114,7 +85,6 @@ void	release_dongles(t_coder *coder)
 	coder->has_dongles = 0;
 	unlock_dongles(coder);
 }
-
 
 static int	can_take(t_coder *coder)
 {
@@ -185,4 +155,54 @@ static void	add_request(t_coder *coder)
 		coder->requested = 1;
 	}
 	unlock_dongles(coder);
+}
+
+static void	init_dongle(t_dongle *dongle)
+{
+	dongle->waiters.size = 0;
+	dongle->available = 1;
+	dongle->next_available_time_ms = 0;
+}
+
+static void	destroy_initialized_dongles(t_dongle *dongles, int count)
+{
+	int	j;
+
+	j = 0;
+	while (j < count)
+	{
+		pthread_mutex_destroy(&dongles[j].mutex);
+		j++;
+	}
+}
+
+static void	handle_even_coder_sleep(t_coder *coder)
+{
+	long long	sleep_delay;
+
+	sleep_delay = coder->sim->config.time_to_compile
+		+ coder->sim->config.dongle_cooldown;
+	smart_sleep(coder->sim, sleep_delay / 4);
+}
+
+static int	wait_for_dongles(t_coder *coder)
+{
+	while (!simulation_stopped(coder->sim))
+	{
+		lock_dongles(coder);
+		if (can_take(coder))
+			return (1);
+		unlock_dongles(coder);
+		usleep(1000);
+	}
+	return (0);
+}
+
+static void	acquire_dongles(t_coder *coder)
+{
+	coder->left_dongle->available = 0;
+	coder->right_dongle->available = 0;
+	coder->has_dongles = 1;
+	log_action(coder, "has taken a dongle");
+	log_action(coder, "has taken a dongle");
 }

@@ -6,7 +6,7 @@
 /*   By: mait-tal <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/22 11:00:50 by mait-tal          #+#    #+#             */
-/*   Updated: 2026/06/22 11:00:51 by mait-tal         ###   ########.fr       */
+/*   Updated: 2026/06/22 11:29:29 by mait-tal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,28 +21,21 @@ void	init_coders(t_simulation *sim)
 
 	if (!sim || !sim->coders || !sim->dongles)
 		return ;
-
 	n = sim->config.number_of_coders;
 	if (n <= 0)
 		return ;
-
-	/* clear allocated coders to avoid uninitialized data */
 	memset(sim->coders, 0, sizeof(sim->coders[0]) * n);
-
 	i = 0;
 	while (i < n)
 	{
 		sim->coders[i].id = i + 1;
 		sim->coders[i].sim = sim;
-
 		sim->coders[i].state = STATE_IDLE;
 		sim->coders[i].last_compile_time_ms = 0;
 		sim->coders[i].compiles_done = 0;
-
 		sim->coders[i].left_dongle = &sim->dongles[i];
 		sim->coders[i].right_dongle = &sim->dongles[(i + 1) % n];
 		sim->coders[i].has_dongles = 0;
-
 		sim->coders[i].request.coder = &sim->coders[i];
 		sim->coders[i].request.priority = 0;
 		sim->coders[i].requested = 0;
@@ -58,8 +51,7 @@ int	compile(t_coder *coder)
 	coder->last_compile_time_ms = get_sim_time(coder->sim);
 	pthread_mutex_unlock(&coder->sim->sim_mutex);
 	set_state(coder, STATE_COMPILING);
-	smart_sleep(coder->sim,
-		coder->sim->config.time_to_compile);
+	smart_sleep(coder->sim, coder->sim->config.time_to_compile);
 	if (simulation_stopped(coder->sim))
 		return (0);
 	coder->compiles_done++;
@@ -77,8 +69,7 @@ void	debug(t_coder *coder)
 	if (simulation_stopped(coder->sim))
 		return ;
 	set_state(coder, STATE_DEBUGGING);
-	smart_sleep(coder->sim,
-		coder->sim->config.time_to_debug);
+	smart_sleep(coder->sim, coder->sim->config.time_to_debug);
 }
 
 void	refactor(t_coder *coder)
@@ -86,8 +77,7 @@ void	refactor(t_coder *coder)
 	if (simulation_stopped(coder->sim))
 		return ;
 	set_state(coder, STATE_REFACTORING);
-	smart_sleep(coder->sim,
-		coder->sim->config.time_to_refactor);
+	smart_sleep(coder->sim, coder->sim->config.time_to_refactor);
 }
 
 int	coder_is_done(t_coder *coder)
@@ -121,12 +111,7 @@ void	set_state(t_coder *coder, t_coder_state state)
 void	log_action(t_coder *coder, char *msg)
 {
 	pthread_mutex_lock(&coder->sim->log_mutex);
-
-	printf("%lld %d %s\n",
-		get_sim_time(coder->sim),
-		coder->id,
-		msg);
-
+	printf("%lld %d %s\n", get_sim_time(coder->sim), coder->id, msg);
 	pthread_mutex_unlock(&coder->sim->log_mutex);
 }
 
@@ -135,18 +120,18 @@ void	*coder_routine(void *arg)
 	t_coder	*coder;
 
 	coder = (t_coder *)arg;
-  while (!simulation_stopped(coder->sim))
-  {
-  	if (!take_dongles(coder))
-  		break ;
-  	if (!compile(coder))
-  	{
-  		release_dongles(coder);
-  		break ;
-  	}
-  	release_dongles(coder);
-  	debug(coder);
-  	refactor(coder);
-  }
+	while (!simulation_stopped(coder->sim))
+	{
+		if (!take_dongles(coder))
+			break ;
+		if (!compile(coder))
+		{
+			release_dongles(coder);
+			break ;
+		}
+		release_dongles(coder);
+		debug(coder);
+		refactor(coder);
+	}
 	return (NULL);
 }
