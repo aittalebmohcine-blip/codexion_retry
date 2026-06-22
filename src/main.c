@@ -6,7 +6,7 @@
 /*   By: mait-tal <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/22 11:01:05 by mait-tal          #+#    #+#             */
-/*   Updated: 2026/06/22 11:01:05 by mait-tal         ###   ########.fr       */
+/*   Updated: 2026/06/22 21:21:42 by mait-tal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 /* ENTRY POINT */
 int	main(int argc, char **argv)
 {
-	t_config	config;
+	t_config		config;
 	t_simulation	sim;
 
 	memset(&config, 0, sizeof(t_config));
