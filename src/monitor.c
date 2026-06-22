@@ -1,6 +1,6 @@
-#include "../includes/monitor.h"
-#include "../includes/simulation.h"
-#include "../includes/coder.h"
+#include "monitor.h"
+#include "simulation.h"
+#include "coder.h"
 
 static int	check_burnouts(t_simulation *sim);
 static int	all_coders_done(t_simulation *sim);

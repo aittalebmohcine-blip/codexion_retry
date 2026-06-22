@@ -1,5 +1,5 @@
-#include "../includes/heap.h"
-#include "../includes/coder.h"
+#include "heap.h"
+#include "coder.h"
 
 static void	swap_requests(t_request **a, t_request **b);
 static void	heapify_up(t_heap *heap, int index);
@@ -45,8 +45,9 @@ void	heap_insert(t_heap *heap, t_request *request)
 	heap->size++;
 }
 
-//smaller priority wins
-//equal priority → smaller coder id wins.
+/* smaller priority wins.
+** equal priority -> smaller coder id wins.
+*/
 int	request_before(t_request *a, t_request *b)
 {
 	if (a->priority < b->priority)

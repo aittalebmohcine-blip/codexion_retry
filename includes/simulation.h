@@ -1,10 +1,11 @@
 #ifndef SIMULATION_H
 # define SIMULATION_H
 
-#include "parse_config.h"
+# include <pthread.h>
+# include "parse_config.h"
 
-typedef struct s_coder t_coder;
-typedef struct s_dongle t_dongle;
+typedef struct s_coder	t_coder;
+typedef struct s_dongle	t_dongle;
 
 typedef struct s_simulation
 {
@@ -16,19 +17,19 @@ typedef struct s_simulation
 	long long	start_time_ms;
 	pthread_t	monitor_thread;
 
-	int	should_stop;
+	int		should_stop;
 	pthread_mutex_t	stop_mutex;
 
-  int	done_coders;
+	int		done_coders;
 
 	/* number of dongle mutexes successfully initialized */
-	int	initialized_dongles;
+	int		initialized_dongles;
 
 	pthread_mutex_t	sim_mutex;
 
 	pthread_mutex_t	wait_mutex;
 	pthread_cond_t	wait_cond;
-}	t_simulation;
+} 	t_simulation;
 
 int		init_simulation(t_simulation *sim, t_config *config);
 int		start_simulation(t_simulation *sim);

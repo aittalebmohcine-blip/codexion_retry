@@ -1,7 +1,7 @@
-#include "../includes/simulation.h"
-#include "../includes/coder.h"
-#include "../includes/dongle.h"
-#include "../includes/monitor.h"
+#include "simulation.h"
+#include "coder.h"
+#include "dongle.h"
+#include "monitor.h"
 #include <pthread.h>
 
 static int	alloc_simulation(t_simulation *sim);
@@ -14,19 +14,19 @@ int	init_simulation(t_simulation *sim, t_config *config)
 {
 	if (!sim || !config)
 		return (0);
-	
+
 	init_simulation_state(sim, config);
-	
+
 	if (!init_simulation_mutexes(sim))
 		return (0);
-	
+
 	/* 1. Allocate resources FIRST so scheduler can depend on them */
 	if (!alloc_and_init_resources(sim))
 	{
 		destroy_simulation_mutexes(sim);
 		return (0);
 	}
-	
+
 	return (1);
 }
 
@@ -198,7 +198,7 @@ static void	destroy_simulation_mutexes(t_simulation *sim)
 	pthread_mutex_destroy(&sim->stop_mutex);
 	pthread_mutex_destroy(&sim->sim_mutex);
 	pthread_mutex_destroy(&sim->wait_mutex);
-  pthread_cond_destroy(&sim->wait_cond);
+	pthread_cond_destroy(&sim->wait_cond);
 }
 
 static int	alloc_and_init_resources(t_simulation *sim)

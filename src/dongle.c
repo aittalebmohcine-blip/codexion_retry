@@ -1,8 +1,8 @@
 #include <pthread.h>
 #include <unistd.h>
-#include "../includes/dongle.h"
-#include "../includes/coder.h"
-#include "../includes/simulation.h"
+#include "dongle.h"
+#include "coder.h"
+#include "simulation.h"
 
 static int	can_take(t_coder *coder);
 static void	lock_dongles(t_coder *coder);
@@ -11,7 +11,8 @@ static void	add_request(t_coder *coder);
 
 int	init_dongles(t_simulation *sim)
 {
-	int	i;
+	int		i;
+	int		j;
 
 	if (!sim || !sim->dongles || sim->config.number_of_coders <= 0)
 		return (0);
@@ -24,7 +25,7 @@ int	init_dongles(t_simulation *sim)
 	{
 		if (pthread_mutex_init(&sim->dongles[i].mutex, NULL) != 0)
 		{
-			int j = 0;
+			j = 0;
 			/* destroy any mutexes successfully initialized so far */
 			while (j < i)
 			{
@@ -45,11 +46,17 @@ int	init_dongles(t_simulation *sim)
 
 int	take_dongles(t_coder *coder)
 {
+	long long	sleep_delay;
+
 	if (coder->left_dongle == coder->right_dongle)
 		return (0);
 
 	if (coder->id % 2 == 0)
-		smart_sleep(coder->sim, (coder->sim->config.time_to_compile + coder->sim->config.dongle_cooldown) / 4);
+	{
+		sleep_delay = coder->sim->config.time_to_compile
+			+ coder->sim->config.dongle_cooldown;
+		smart_sleep(coder->sim, sleep_delay / 4);
+	}
 
 	add_request(coder);
 

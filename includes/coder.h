@@ -1,8 +1,8 @@
 #ifndef CODER_H
 # define CODER_H
 
-#include "heap.h"
-#include <pthread.h>
+# include "heap.h"
+# include <pthread.h>
 
 typedef enum e_coder_state
 {
@@ -12,29 +12,29 @@ typedef enum e_coder_state
 	STATE_REFACTORING,
 	STATE_BURNED_OUT,
 	STATE_DONE
-}	t_coder_state;
+} 	t_coder_state;
 
 typedef struct s_dongle t_dongle;
 typedef struct s_simulation t_simulation;
 
 typedef struct s_coder
 {
-  pthread_t			thread;
+	pthread_t	thread;
 
-	int					id;
-	struct s_simulation	*sim;
+	int		id;
+	t_simulation	*sim;
 
 	t_coder_state	state;
 	long long	last_compile_time_ms;
-	int	compiles_done;
+	int		compiles_done;
 
 	t_dongle	*left_dongle;
 	t_dongle	*right_dongle;
-	int	has_dongles;
+	int		has_dongles;
 
 	t_request	request;
-	int	requested;
-}	t_coder;
+	int		requested;
+} 	t_coder;
 
 void	init_coders(t_simulation *sim);
 

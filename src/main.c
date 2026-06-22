@@ -1,4 +1,4 @@
-#include "../includes/simulation.h"
+#include "simulation.h"
 
 /* ENTRY POINT */
 int	main(int argc, char **argv)

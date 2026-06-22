@@ -1,6 +1,6 @@
-#include "../includes/coder.h"
-#include "../includes/simulation.h"
-#include "../includes/dongle.h"
+#include "coder.h"
+#include "simulation.h"
+#include "dongle.h"
 
 void	init_coders(t_simulation *sim)
 {
