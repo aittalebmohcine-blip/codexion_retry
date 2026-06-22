@@ -1,19 +1,14 @@
 Working on:
-  - initialization.
 
 To do:
-  - destortion.
-  - unused attrs.
-  - thread creation
+  - f-sanitize
   - leaks.
-  - heap size = 2
   - priority by order of compiling times.
   - includes.
   - src code documentation.
   - norminette.
   - readme
-	- init_dongles(): mutex initialization failure in the middle is not handled.
-	- makefile does not rebuild when there is change in a header file.
+  - makefile does not rebuild when there is change in a header file.
 
 
 
