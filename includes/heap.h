@@ -6,7 +6,7 @@
 /*   By: mait-tal <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/22 10:59:35 by mait-tal          #+#    #+#             */
-/*   Updated: 2026/06/23 11:04:06 by mait-tal         ###   ########.fr       */
+/*   Updated: 2026/06/23 12:31:24 by mait-tal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,8 @@ void			heap_insert(t_heap *heap, t_request *request);
 int				request_before(t_request *a, t_request *b);
 t_request		*heap_top(t_heap *heap);
 
-void	heapify_down(t_heap *heap, int index);
-int	smallest_child(t_heap *heap, int index);
-void	heapify_up(t_heap *heap, int index);
-void	swap_requests(t_request **a, t_request **b);
+void			heapify_down(t_heap *heap, int index);
+void			heapify_up(t_heap *heap, int index);
+void			swap_requests(t_request **a, t_request **b);
+int				smallest_child(t_heap *heap, int index);
 #endif
