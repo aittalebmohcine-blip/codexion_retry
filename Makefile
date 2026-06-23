@@ -23,6 +23,10 @@ SRCS        = $(SRC_DIR)/main.c \
               $(SRC_DIR)/init_dongles.c \
               $(SRC_DIR)/parse_config.c \
               $(SRC_DIR)/heap.c \
+              $(SRC_DIR)/heap_utils.c \
+              $(SRC_DIR)/init_sim_helpers.c \
+              $(SRC_DIR)/init_simulation.c \
+              $(SRC_DIR)/simulation_helpers.c \
 
 # --- Object Files (maps src/*.c to obj/*.o) ---
 OBJS        = $(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)

@@ -6,7 +6,7 @@
 /*   By: mait-tal <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/22 11:00:25 by mait-tal          #+#    #+#             */
-/*   Updated: 2026/06/22 11:19:42 by mait-tal         ###   ########.fr       */
+/*   Updated: 2026/06/23 12:33:07 by mait-tal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,14 +42,24 @@ typedef struct s_simulation
 	pthread_cond_t	wait_cond;
 }	t_simulation;
 
+//init_simulation.c
 int			init_simulation(t_simulation *sim, t_config *config);
+void		init_simulation_state(t_simulation *sim, t_config *config);
+int			init_simulation_mutexes(t_simulation *sim);
+int			alloc_and_init_resources(t_simulation *sim);
+//init_sim_helpers.c
+void		destroy_sim_mutexes(t_simulation *sim, int stage);
+int			alloc_simulation(t_simulation *sim);
+
+//simulation.c
 int			start_simulation(t_simulation *sim);
 void		wait_simulation(t_simulation *sim);
 void		destroy_simulation(t_simulation *sim);
 
+//simulation_helpers.c
+void		destroy_simulation_mutexes(t_simulation *sim);
 long long	get_sim_time(t_simulation *sim);
 void		smart_sleep(t_simulation *sim, long long duration_ms);
-
 int			simulation_stopped(t_simulation *sim);
 void		stop_simulation(t_simulation *sim);
 
