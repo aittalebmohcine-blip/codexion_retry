@@ -6,17 +6,12 @@
 /*   By: mait-tal <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/22 11:01:01 by mait-tal          #+#    #+#             */
-/*   Updated: 2026/06/22 21:19:32 by mait-tal         ###   ########.fr       */
+/*   Updated: 2026/06/23 11:03:22 by mait-tal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "heap.h"
 #include "coder.h"
-
-static void	swap_requests(t_request **a, t_request **b);
-static void	heapify_up(t_heap *heap, int index);
-static int	smallest_child(t_heap *heap, int index);
-static void	heapify_down(t_heap *heap, int index);
 
 void	heap_remove_top(t_heap *heap)
 {
@@ -74,60 +69,4 @@ t_request	*heap_top(t_heap *heap)
 	if (heap->size == 0)
 		return (NULL);
 	return (heap->data[0]);
-}
-
-static void	swap_requests(t_request **a, t_request **b)
-{
-	t_request	*tmp;
-
-	tmp = *a;
-	*a = *b;
-	*b = tmp;
-}
-
-static void	heapify_up(t_heap *heap, int index)
-{
-	int	parent;
-
-	while (index > 0)
-	{
-		parent = (index - 1) / 2;
-		if (!request_before(heap->data[index],
-				heap->data[parent]))
-			break ;
-		swap_requests(&heap->data[index],
-			&heap->data[parent]);
-		index = parent;
-	}
-}
-
-static int	smallest_child(t_heap *heap, int index)
-{
-	int	left;
-	int	right;
-
-	left = index * 2 + 1;
-	right = index * 2 + 2;
-	if (right >= heap->size)
-		return (left);
-	if (request_before(heap->data[left],
-			heap->data[right]))
-		return (left);
-	return (right);
-}
-
-static void	heapify_down(t_heap *heap, int index)
-{
-	int	child;
-
-	while (index * 2 + 1 < heap->size)
-	{
-		child = smallest_child(heap, index);
-		if (!request_before(heap->data[child],
-				heap->data[index]))
-			break ;
-		swap_requests(&heap->data[child],
-			&heap->data[index]);
-		index = child;
-	}
 }
