@@ -6,7 +6,7 @@
 /*   By: mait-tal <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/22 10:59:30 by mait-tal          #+#    #+#             */
-/*   Updated: 2026/06/22 11:11:31 by mait-tal         ###   ########.fr       */
+/*   Updated: 2026/06/23 09:32:25 by mait-tal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,4 +31,8 @@ int		init_dongles(t_simulation *sim);
 int		take_dongles(t_coder *coder);
 void	release_dongles(t_coder *coder);
 
+void	lock_dongles(t_coder *coder);
+void	unlock_dongles(t_coder *coder);
+void	add_request(t_coder *coder);
+int	can_take(t_coder *coder);
 #endif

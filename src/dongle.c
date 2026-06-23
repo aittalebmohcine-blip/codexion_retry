@@ -6,50 +6,18 @@
 /*   By: mait-tal <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/22 11:00:58 by mait-tal          #+#    #+#             */
-/*   Updated: 2026/06/22 11:39:12 by mait-tal         ###   ########.fr       */
+/*   Updated: 2026/06/23 09:30:09 by mait-tal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <pthread.h>
 #include <unistd.h>
 #include "dongle.h"
 #include "coder.h"
 #include "simulation.h"
 
-static int	can_take(t_coder *coder);
-static void	lock_dongles(t_coder *coder);
-static void	unlock_dongles(t_coder *coder);
-static void	add_request(t_coder *coder);
-
-static void	init_dongle(t_dongle *dongle);
-static void	destroy_initialized_dongles(t_dongle *dongles, int count);
-
 static void	handle_even_coder_sleep(t_coder *coder);
 static int	wait_for_dongles(t_coder *coder);
 static void	acquire_dongles(t_coder *coder);
-
-int	init_dongles(t_simulation *sim)
-{
-	int	i;
-
-	if (!sim || !sim->dongles || sim->config.number_of_coders <= 0)
-		return (0);
-	sim->initialized_dongles = 0;
-	i = 0;
-	while (i < sim->config.number_of_coders)
-	{
-		if (pthread_mutex_init(&sim->dongles[i].mutex, NULL) != 0)
-		{
-			destroy_initialized_dongles(sim->dongles, i);
-			sim->initialized_dongles = 0;
-			return (0);
-		}
-		init_dongle(&sim->dongles[i]);
-		i++;
-		sim->initialized_dongles++;
-	}
-	return (1);
-}
 
 int	take_dongles(t_coder *coder)
 {
@@ -84,96 +52,6 @@ void	release_dongles(t_coder *coder)
 		+ coder->sim->config.dongle_cooldown;
 	coder->has_dongles = 0;
 	unlock_dongles(coder);
-}
-
-static int	can_take(t_coder *coder)
-{
-	long long	now;
-
-	now = get_sim_time(coder->sim);
-	if (heap_top(&coder->left_dongle->waiters) != &coder->request)
-		return (0);
-	if (heap_top(&coder->right_dongle->waiters) != &coder->request)
-		return (0);
-	if (!coder->left_dongle->available
-		|| now < coder->left_dongle->next_available_time_ms
-		|| !coder->right_dongle->available
-		|| now < coder->right_dongle->next_available_time_ms)
-		return (0);
-	return (1);
-}
-
-static void	lock_dongles(t_coder *coder)
-{
-	if (coder->left_dongle < coder->right_dongle)
-	{
-		pthread_mutex_lock(&coder->left_dongle->mutex);
-		pthread_mutex_lock(&coder->right_dongle->mutex);
-	}
-	else
-	{
-		pthread_mutex_lock(&coder->right_dongle->mutex);
-		pthread_mutex_lock(&coder->left_dongle->mutex);
-	}
-}
-
-static void	unlock_dongles(t_coder *coder)
-{
-	if (coder->left_dongle < coder->right_dongle)
-	{
-		pthread_mutex_unlock(&coder->right_dongle->mutex);
-		pthread_mutex_unlock(&coder->left_dongle->mutex);
-	}
-	else
-	{
-		pthread_mutex_unlock(&coder->left_dongle->mutex);
-		pthread_mutex_unlock(&coder->right_dongle->mutex);
-	}
-}
-
-static void	add_request(t_coder *coder)
-{
-	long long	deadline;
-
-	lock_dongles(coder);
-	if (coder->sim->config.scheduler_type == SCHEDULER_FIFO)
-		coder->request.priority = get_sim_time(coder->sim);
-	else
-	{
-		pthread_mutex_lock(&coder->sim->sim_mutex);
-		deadline = coder->last_compile_time_ms;
-		pthread_mutex_unlock(&coder->sim->sim_mutex);
-		coder->request.priority = deadline
-			+ coder->sim->config.time_to_burnout;
-	}
-	if (!coder->requested)
-	{
-		heap_insert(&coder->left_dongle->waiters,
-			&coder->request);
-		heap_insert(&coder->right_dongle->waiters,
-			&coder->request);
-		coder->requested = 1;
-	}
-	unlock_dongles(coder);
-}
-
-static void	init_dongle(t_dongle *dongle)
-{
-	dongle->waiters.size = 0;
-	dongle->available = 1;
-	dongle->next_available_time_ms = 0;
-}
-
-static void	destroy_initialized_dongles(t_dongle *dongles, int count)
-{
-	int	j;
-
-	j = 0;
-	while (j < count)
-	{
-		pthread_mutex_destroy(&dongles[j].mutex);
-		j++;
-	}
 }
 
 static void	handle_even_coder_sleep(t_coder *coder)

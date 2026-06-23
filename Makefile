@@ -19,10 +19,10 @@ SRCS        = $(SRC_DIR)/main.c \
               $(SRC_DIR)/coder_utils.c \
 							$(SRC_DIR)/monitor.c \
               $(SRC_DIR)/dongle.c \
+							$(SRC_DIR)/dongle_utils.c \
+              $(SRC_DIR)/init_dongles.c \
               $(SRC_DIR)/parse_config.c \
               $(SRC_DIR)/heap.c \
-#              $(SRC_DIR)/utils.c \
-#              $(SRC_DIR)/scheduler.c \
 
 # --- Object Files (maps src/*.c to obj/*.o) ---
 OBJS        = $(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
