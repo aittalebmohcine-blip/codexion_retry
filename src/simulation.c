@@ -6,7 +6,7 @@
 /*   By: mait-tal <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/22 11:01:21 by mait-tal          #+#    #+#             */
-/*   Updated: 2026/06/22 11:01:22 by mait-tal         ###   ########.fr       */
+/*   Updated: 2026/06/23 08:33:10 by mait-tal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,19 +26,14 @@ int	init_simulation(t_simulation *sim, t_config *config)
 {
 	if (!sim || !config)
 		return (0);
-
 	init_simulation_state(sim, config);
-
 	if (!init_simulation_mutexes(sim))
 		return (0);
-
-	/* 1. Allocate resources FIRST so scheduler can depend on them */
 	if (!alloc_and_init_resources(sim))
 	{
 		destroy_simulation_mutexes(sim);
 		return (0);
 	}
-
 	return (1);
 }
 
@@ -95,7 +90,6 @@ void	destroy_simulation(t_simulation *sim)
 	if (sim->coders)
 	{
 		i = 0;
-		/* only destroy the mutexes that were successfully initialized */
 		while (i < sim->initialized_dongles)
 		{
 			if (sim->dongles)
@@ -171,34 +165,40 @@ static void	init_simulation_state(t_simulation *sim, t_config *config)
 	sim->initialized_dongles = 0;
 }
 
+static void	destroy_sim_mutexes(t_simulation *sim, int stage)
+{
+	if (stage >= 4)
+		pthread_mutex_destroy(&sim->wait_mutex);
+	if (stage >= 3)
+		pthread_mutex_destroy(&sim->log_mutex);
+	if (stage >= 2)
+		pthread_mutex_destroy(&sim->stop_mutex);
+	if (stage >= 1)
+		pthread_mutex_destroy(&sim->sim_mutex);
+}
+
 static int	init_simulation_mutexes(t_simulation *sim)
 {
 	if (pthread_mutex_init(&sim->sim_mutex, NULL) != 0)
 		return (0);
 	if (pthread_mutex_init(&sim->stop_mutex, NULL) != 0)
 	{
-		pthread_mutex_destroy(&sim->sim_mutex);
+		destroy_sim_mutexes(sim, 1);
 		return (0);
 	}
 	if (pthread_mutex_init(&sim->log_mutex, NULL) != 0)
 	{
-		pthread_mutex_destroy(&sim->sim_mutex);
-		pthread_mutex_destroy(&sim->stop_mutex);
+		destroy_sim_mutexes(sim, 2);
 		return (0);
 	}
 	if (pthread_mutex_init(&sim->wait_mutex, NULL) != 0)
 	{
-		pthread_mutex_destroy(&sim->sim_mutex);
-		pthread_mutex_destroy(&sim->stop_mutex);
-		pthread_mutex_destroy(&sim->log_mutex);
+		destroy_sim_mutexes(sim, 3);
 		return (0);
 	}
 	if (pthread_cond_init(&sim->wait_cond, NULL) != 0)
 	{
-		pthread_mutex_destroy(&sim->sim_mutex);
-		pthread_mutex_destroy(&sim->stop_mutex);
-		pthread_mutex_destroy(&sim->log_mutex);
-		pthread_mutex_destroy(&sim->wait_mutex);
+		destroy_sim_mutexes(sim, 4);
 		return (0);
 	}
 	return (1);
