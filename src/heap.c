@@ -6,12 +6,12 @@
 /*   By: mait-tal <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/22 11:01:01 by mait-tal          #+#    #+#             */
-/*   Updated: 2026/06/23 11:03:22 by mait-tal         ###   ########.fr       */
+/*   Updated: 2026/06/24 09:28:25 by mait-tal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "heap.h"
-#include "coder.h"
+#include "../includes/heap.h"
+#include "../includes/coder.h"
 
 void	heap_remove_top(t_heap *heap)
 {

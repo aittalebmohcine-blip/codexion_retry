@@ -6,13 +6,13 @@
 /*   By: mait-tal <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/23 09:33:45 by mait-tal          #+#    #+#             */
-/*   Updated: 2026/06/23 09:33:47 by mait-tal         ###   ########.fr       */
+/*   Updated: 2026/06/24 09:28:36 by mait-tal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <pthread.h>
-#include "dongle.h"
-#include "simulation.h"
+#include "../includes/dongle.h"
+#include "../includes/simulation.h"
 
 static void	init_dongle(t_dongle *dongle)
 {

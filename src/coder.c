@@ -6,13 +6,13 @@
 /*   By: mait-tal <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/22 11:00:50 by mait-tal          #+#    #+#             */
-/*   Updated: 2026/06/23 09:00:02 by mait-tal         ###   ########.fr       */
+/*   Updated: 2026/06/24 09:27:42 by mait-tal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "coder.h"
-#include "simulation.h"
-#include "dongle.h"
+#include "../includes/coder.h"
+#include "../includes/simulation.h"
+#include "../includes/dongle.h"
 
 void	init_coders(t_simulation *sim)
 {

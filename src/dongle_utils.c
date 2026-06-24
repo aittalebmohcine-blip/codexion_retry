@@ -6,13 +6,13 @@
 /*   By: mait-tal <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/23 09:34:01 by mait-tal          #+#    #+#             */
-/*   Updated: 2026/06/23 09:34:02 by mait-tal         ###   ########.fr       */
+/*   Updated: 2026/06/24 09:28:19 by mait-tal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "dongle.h"
-#include "coder.h"
-#include "simulation.h"
+#include "../includes/dongle.h"
+#include "../includes/coder.h"
+#include "../includes/simulation.h"
 
 void	lock_dongles(t_coder *coder)
 {

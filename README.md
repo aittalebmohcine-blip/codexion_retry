@@ -1,12 +1,11 @@
 Working on:
+  - includes.
 
 To do:
   - f-sanitize
   - leaks.
   - priority by order of compiling times.
-  - includes.
   - src code documentation.
-  - norminette.
   - readme
   - makefile does not rebuild when there is change in a header file.
 

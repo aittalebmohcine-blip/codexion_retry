@@ -6,12 +6,12 @@
 /*   By: mait-tal <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/23 09:00:08 by mait-tal          #+#    #+#             */
-/*   Updated: 2026/06/23 09:00:09 by mait-tal         ###   ########.fr       */
+/*   Updated: 2026/06/24 09:27:52 by mait-tal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "coder.h"
-#include "simulation.h"
+#include "../includes/coder.h"
+#include "../includes/simulation.h"
 
 int	coder_is_done(t_coder *coder)
 {
