@@ -6,11 +6,10 @@
 /*   By: mait-tal <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/23 12:24:15 by mait-tal          #+#    #+#             */
-/*   Updated: 2026/06/24 09:29:05 by mait-tal         ###   ########.fr       */
+/*   Updated: 2026/06/24 11:02:01 by mait-tal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
 #include "../includes/simulation.h"
 
 void	destroy_simulation_mutexes(t_simulation *sim)

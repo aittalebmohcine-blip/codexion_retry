@@ -6,7 +6,7 @@
 /*   By: mait-tal <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/22 11:01:21 by mait-tal          #+#    #+#             */
-/*   Updated: 2026/06/24 09:29:01 by mait-tal         ###   ########.fr       */
+/*   Updated: 2026/06/24 11:01:17 by mait-tal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 #include "../includes/coder.h"
 #include "../includes/dongle.h"
 #include "../includes/monitor.h"
-#include <pthread.h>
 
 int	start_simulation(t_simulation *sim)
 {

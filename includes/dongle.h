@@ -6,15 +6,16 @@
 /*   By: mait-tal <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/22 10:59:30 by mait-tal          #+#    #+#             */
-/*   Updated: 2026/06/23 12:26:55 by mait-tal         ###   ########.fr       */
+/*   Updated: 2026/06/24 09:40:31 by mait-tal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef DONGLE_H
 # define DONGLE_H
 
-# include "heap.h"
+# include <unistd.h>
 # include <pthread.h>
+# include "heap.h"
 
 typedef struct s_coder		t_coder;
 typedef struct s_simulation	t_simulation;
