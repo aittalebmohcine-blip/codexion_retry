@@ -33,6 +33,7 @@ OBJS        = $(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 
 # --- Include Flags ---
 INCLUDES    = -I $(INC_DIR)
+HEADERS = $(INC_DIR)/*.h
 
 # **************************************************************************** #
 #                                    Rules                                     #
@@ -47,8 +48,8 @@ $(NAME):    $(OBJS)
 
 # Compilation rule: Compiles .c to .o only if the .c file is newer than the .o file
 # The '| $(OBJ_DIR)' ensures the directory exists before compiling (Order-only prerequisite)
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
-			$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c $(HEADERS) | $(OBJ_DIR)
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 # Directory creation rule
 $(OBJ_DIR):
