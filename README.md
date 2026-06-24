@@ -1,9 +1,6 @@
 Working on:
 
 To do:
-  - f-sanitize
-  - leaks.
-  - priority by order of compiling times.
   - src code documentation.
   - readme
   - makefile does not rebuild when there is change in a header file.
