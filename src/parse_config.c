@@ -24,10 +24,10 @@ int	parse_arguments(int argc, char **argv, t_config *config)
 		|| !parse_int_field(argv[2], &config->time_to_burnout, 1)
 		|| !parse_int_field(argv[3], &config->time_to_compile, 1))
 		return (print_error("Invalid positive integer argument."), 0);
-	if (!parse_int_field(argv[4], &config->time_to_debug, 0)
-		|| !parse_int_field(argv[5], &config->time_to_refactor, 0)
+	if (!parse_int_field(argv[4], &config->time_to_debug, 1)
+		|| !parse_int_field(argv[5], &config->time_to_refactor, 1)
 		|| !parse_int_field(argv[6], &config->number_of_compiles_required, 1)
-		|| !parse_int_field(argv[7], &config->dongle_cooldown, 0))
+		|| !parse_int_field(argv[7], &config->dongle_cooldown, 1))
 		return (print_error("Invalid integer argument."), 0);
 	if (strcmp(argv[8], "fifo") == 0)
 		config->scheduler_type = SCHEDULER_FIFO;
