@@ -12,31 +12,9 @@
 
 #include "../includes/parse_config.h"
 
-static void	print_error(const char *msg);
 static int	parse_int_field(const char *arg, int *out, int must_be_positive);
-
-static int	valid_argc(int argc)
-{
-	if (argc != 9)
-	{
-		print_error("Invalid number of arguments.");
-		return (0);
-	}
-	return (1);
-}
-
-static int	cheduler_type(char *s)
-{
-	if (strcmp(s, "fifo") == 0)
-		return (1);
-	else if (strcmp(s, "edf") == 0)
-		return (2);
-	else
-	{
-		print_error("Invalid scheduler. Use 'fifo' or 'edf'.");
-		return (0);
-	}
-}
+static int	valid_argc(int argc);
+static int	cheduler_type(char *s);
 
 /* TRANSITIONS: Raw argv → validated config state (21 lines) */
 int	parse_arguments(int argc, char **argv, t_config *config)
@@ -75,28 +53,6 @@ long long	get_time_ms(void)
 	return ((tv.tv_sec * 1000LL) + (tv.tv_usec / 1000));
 }
 
-/* CONSTRAINTS: Helper to print errors to stderr */
-static void	print_error(const char *msg)
-{
-	fprintf(stderr, "Error: %s\n", msg);
-}
-
-/* CONSTRAINTS: Strict integer validation (no for loops) */
-static int	is_valid_number(const char *str)
-{
-	if (!str || *str == '\0' || *str == '-')
-		return (0);
-	if (*str == '+')
-		str++;
-	while (*str)
-	{
-		if (*str < '0' || *str > '9')
-			return (0);
-		str++;
-	}
-	return (1);
-}
-
 /* CONSTRAINTS: Validates and populates a single integer field */
 static int	parse_int_field(const char *arg, int *out, int must_be_positive)
 {
@@ -109,4 +65,27 @@ static int	parse_int_field(const char *arg, int *out, int must_be_positive)
 		return (0);
 	*out = val;
 	return (1);
+}
+
+static int	valid_argc(int argc)
+{
+	if (argc != 9)
+	{
+		print_error("Invalid number of arguments.");
+		return (0);
+	}
+	return (1);
+}
+
+static int	cheduler_type(char *s)
+{
+	if (strcmp(s, "fifo") == 0)
+		return (1);
+	else if (strcmp(s, "edf") == 0)
+		return (2);
+	else
+	{
+		print_error("Invalid scheduler. Use 'fifo' or 'edf'.");
+		return (0);
+	}
 }
