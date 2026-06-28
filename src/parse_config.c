@@ -57,6 +57,8 @@ static int	is_valid_number(const char *str)
 {
 	if (!str || *str == '\0' || *str == '-')
 		return (0);
+	if (*str == '+')
+		str++;
 	while (*str)
 	{
 		if (*str < '0' || *str > '9')
