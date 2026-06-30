@@ -15,6 +15,15 @@
 #include "../includes/dongle.h"
 #include "../includes/monitor.h"
 
+static void	start_all_threads(t_simulation *sim)
+{
+	pthread_mutex_lock(&sim->coders_count_mutex);
+	sim->start_time_ms = get_time_ms();
+	sim->created_coders_count = 1;
+	pthread_cond_broadcast(&sim->barriere);
+	pthread_mutex_unlock(&sim->coders_count_mutex);
+}
+
 int	start_simulation(t_simulation *sim)
 {
 	int	i;
@@ -29,7 +38,6 @@ int	start_simulation(t_simulation *sim)
 				coder_routine,
 				&sim->coders[i]))
 		{
-			sim->config.number_of_coders = i;
 			stop_simulation(sim);
 			return (0);
 		}
@@ -37,10 +45,10 @@ int	start_simulation(t_simulation *sim)
 	}
 	if (pthread_create(&sim->monitor_thread, NULL, monitor_routine, sim))
 	{
-		sim->config.number_of_coders = i;
 		stop_simulation(sim);
 		return (0);
 	}
+	start_all_threads(sim);
 	return (1);
 }
 

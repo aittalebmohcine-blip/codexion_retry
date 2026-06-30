@@ -80,11 +80,21 @@ void	refactor(t_coder *coder)
 	smart_sleep(coder->sim, coder->sim->config.time_to_refactor);
 }
 
+void	wait_for_start(t_simulation *sim)
+{
+	pthread_mutex_lock(&sim->coders_count_mutex);
+	while (!sim->created_coders_count)
+		pthread_cond_wait(&sim->barriere,
+			&sim->coders_count_mutex);
+	pthread_mutex_unlock(&sim->coders_count_mutex);
+}
+
 void	*coder_routine(void *arg)
 {
 	t_coder	*coder;
 
 	coder = (t_coder *)arg;
+	wait_for_start(coder->sim);
 	while (!simulation_stopped(coder->sim))
 	{
 		if (!take_dongles(coder))
