@@ -12,19 +12,30 @@
 
 #include "../includes/parse_config.h"
 
-/* CONSTRAINTS: Helper to print errors to stderr */
 void	print_error(const char *msg)
 {
 	fprintf(stderr, "Error: %s\n", msg);
 }
 
-/* CONSTRAINTS: Strict integer validation (no for loops) */
 int	is_valid_number(const char *str)
 {
-	if (!str || *str == '\0' || *str == '-')
+	if (!str || *str == '\0')
 		return (0);
 	if (*str == '+')
 		str++;
+	else if (*str == '-')
+	{
+		str++;
+		if (*str == '\0')
+			return (0);
+		while (*str == '0')
+			str++;
+		if (*str != '\0')
+			return (0);
+		return (1);
+	}
+	if (*str == '\0')
+		return (0);
 	while (*str)
 	{
 		if (*str < '0' || *str > '9')

@@ -61,7 +61,7 @@ static int	parse_int_field(const char *arg, int *out, int must_be_positive)
 	if (!is_valid_number(arg))
 		return (0);
 	val = atoi(arg);
-	if (must_be_positive && val <= 0)
+	if (must_be_positive && val < 0)
 		return (0);
 	*out = val;
 	return (1);
