@@ -16,6 +16,8 @@
 
 void	destroy_sim_mutexes(t_simulation *sim, int stage)
 {
+	if (stage >= 4)
+		pthread_mutex_destroy(&sim->coders_count_mutex);
 	if (stage >= 3)
 		pthread_mutex_destroy(&sim->log_mutex);
 	if (stage >= 2)
