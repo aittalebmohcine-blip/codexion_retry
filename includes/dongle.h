@@ -28,12 +28,16 @@ typedef struct s_dongle
 	t_heap			waiters;
 }	t_dongle;
 
+//init_dongles.c
 int		init_dongles(t_simulation *sim);
+
+//dongle.c
 int		take_dongles(t_coder *coder);
 void	release_dongles(t_coder *coder);
 
+//dongle_utils.c
 void	lock_dongles(t_coder *coder);
 void	unlock_dongles(t_coder *coder);
-void	add_request(t_coder *coder);
 int		can_take(t_coder *coder);
+void	add_request(t_coder *coder);
 #endif
