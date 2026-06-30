@@ -14,6 +14,7 @@
 
 void	destroy_simulation_mutexes(t_simulation *sim)
 {
+	pthread_cond_destroy(&sim->barriere);
 	pthread_mutex_destroy(&sim->log_mutex);
 	pthread_mutex_destroy(&sim->stop_mutex);
 	pthread_mutex_destroy(&sim->sim_mutex);

@@ -27,6 +27,7 @@ typedef struct s_simulation
 	t_dongle		*dongles;
 
 	pthread_mutex_t	log_mutex;
+	pthread_cond_t	barriere;
 	long long		start_time_ms;
 	pthread_t		monitor_thread;
 
