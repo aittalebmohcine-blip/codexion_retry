@@ -47,3 +47,12 @@ void	log_action(t_coder *coder, char *msg)
 	printf("%lld %d %s\n", get_sim_time(coder->sim), coder->id, msg);
 	pthread_mutex_unlock(&coder->sim->log_mutex);
 }
+
+void	wait_for_start(t_simulation *sim)
+{
+	pthread_mutex_lock(&sim->coders_count_mutex);
+	while (!sim->created_coders_count)
+		pthread_cond_wait(&sim->barriere,
+			&sim->coders_count_mutex);
+	pthread_mutex_unlock(&sim->coders_count_mutex);
+}

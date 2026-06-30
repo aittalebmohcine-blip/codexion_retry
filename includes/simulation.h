@@ -38,7 +38,7 @@ typedef struct s_simulation
 	int				initialized_dongles;
 
 	pthread_mutex_t	sim_mutex;
-	
+
 	int				created_coders_count;
 	pthread_mutex_t	coders_count_mutex;
 	pthread_cond_t	barriere;

@@ -59,6 +59,7 @@ void	mark_coder_done(t_coder *coder);
 
 void	set_state(t_coder *coder, t_coder_state state);
 void	log_action(t_coder *coder, char *msg);
+void	wait_for_start(t_simulation *sim);
 
 void	*coder_routine(void *arg);
 
