@@ -14,7 +14,6 @@
 #include "../includes/coder.h"
 #include "../includes/simulation.h"
 
-static void	handle_even_coder_sleep(t_coder *coder);
 static int	wait_for_dongles(t_coder *coder);
 static void	acquire_dongles(t_coder *coder);
 
@@ -22,8 +21,6 @@ int	take_dongles(t_coder *coder)
 {
 	if (coder->left_dongle == coder->right_dongle)
 		return (0);
-	if (coder->id % 2 == 0)
-		handle_even_coder_sleep(coder);
 	add_request(coder);
 	if (!wait_for_dongles(coder))
 		return (0);
@@ -51,15 +48,6 @@ void	release_dongles(t_coder *coder)
 		+ coder->sim->config.dongle_cooldown;
 	coder->has_dongles = 0;
 	unlock_dongles(coder);
-}
-
-static void	handle_even_coder_sleep(t_coder *coder)
-{
-	long long	sleep_delay;
-
-	sleep_delay = coder->sim->config.time_to_compile
-		+ coder->sim->config.dongle_cooldown;
-	smart_sleep(coder->sim, sleep_delay / 4);
 }
 
 static int	wait_for_dongles(t_coder *coder)

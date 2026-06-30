@@ -17,6 +17,7 @@ SRCS        = $(SRC_DIR)/main.c \
 							$(SRC_DIR)/simulation.c \
               $(SRC_DIR)/coder.c \
               $(SRC_DIR)/coder_utils.c \
+              $(SRC_DIR)/coder_helpers.c \
 							$(SRC_DIR)/monitor.c \
               $(SRC_DIR)/dongle.c \
 							$(SRC_DIR)/dongle_utils.c \

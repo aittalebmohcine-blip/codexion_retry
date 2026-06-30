@@ -48,19 +48,21 @@ typedef struct s_coder
 	int				requested;
 }	t_coder;
 
+//coder.c
 void	init_coders(t_simulation *sim);
-
 int		compile(t_coder *coder);
 void	debug(t_coder *coder);
 void	refactor(t_coder *coder);
+void	*coder_routine(void *arg);
 
+//coder_utils.c
 int		coder_is_done(t_coder *coder);
 void	mark_coder_done(t_coder *coder);
-
 void	set_state(t_coder *coder, t_coder_state state);
 void	log_action(t_coder *coder, char *msg);
 void	wait_for_start(t_simulation *sim);
 
-void	*coder_routine(void *arg);
+//coder_helpers.c
+void	handle_even_coder_sleep(t_coder *coder);
 
 #endif

@@ -86,6 +86,8 @@ void	*coder_routine(void *arg)
 
 	coder = (t_coder *)arg;
 	wait_for_start(coder->sim);
+	if (coder->id % 2 == 0)
+		handle_even_coder_sleep(coder);
 	while (!simulation_stopped(coder->sim))
 	{
 		if (!take_dongles(coder))
