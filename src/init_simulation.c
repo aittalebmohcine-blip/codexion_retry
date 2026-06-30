@@ -53,16 +53,6 @@ int	init_simulation_mutexes(t_simulation *sim)
 		destroy_sim_mutexes(sim, 2);
 		return (0);
 	}
-	if (pthread_mutex_init(&sim->wait_mutex, NULL) != 0)
-	{
-		destroy_sim_mutexes(sim, 3);
-		return (0);
-	}
-	if (pthread_cond_init(&sim->wait_cond, NULL) != 0)
-	{
-		destroy_sim_mutexes(sim, 4);
-		return (0);
-	}
 	return (1);
 }
 

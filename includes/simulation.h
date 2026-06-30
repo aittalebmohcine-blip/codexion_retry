@@ -38,9 +38,6 @@ typedef struct s_simulation
 	int				initialized_dongles;
 
 	pthread_mutex_t	sim_mutex;
-
-	pthread_mutex_t	wait_mutex;
-	pthread_cond_t	wait_cond;
 }	t_simulation;
 
 //init_simulation.c

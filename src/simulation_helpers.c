@@ -17,8 +17,6 @@ void	destroy_simulation_mutexes(t_simulation *sim)
 	pthread_mutex_destroy(&sim->log_mutex);
 	pthread_mutex_destroy(&sim->stop_mutex);
 	pthread_mutex_destroy(&sim->sim_mutex);
-	pthread_mutex_destroy(&sim->wait_mutex);
-	pthread_cond_destroy(&sim->wait_cond);
 }
 
 long long	get_sim_time(t_simulation *sim)
