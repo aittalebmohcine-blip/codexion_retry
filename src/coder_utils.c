@@ -44,7 +44,8 @@ void	set_state(t_coder *coder, t_coder_state state)
 void	log_action(t_coder *coder, char *msg)
 {
 	pthread_mutex_lock(&coder->sim->log_mutex);
-	printf("%lld %d %s\n", get_sim_time(coder->sim), coder->id, msg);
+	if (!simulation_stopped(coder->sim) || !strcmp(msg, "burned out"))
+		printf("%lld %d %s\n", get_sim_time(coder->sim), coder->id, msg);
 	pthread_mutex_unlock(&coder->sim->log_mutex);
 }
 
