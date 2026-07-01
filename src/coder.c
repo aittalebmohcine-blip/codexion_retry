@@ -55,12 +55,6 @@ int	compile(t_coder *coder)
 	if (simulation_stopped(coder->sim))
 		return (0);
 	coder->compiles_done++;
-	if (coder_is_done(coder))
-	{
-		set_state(coder, STATE_DONE);
-		mark_coder_done(coder);
-		return (0);
-	}
 	return (1);
 }
 
@@ -90,6 +84,12 @@ void	*coder_routine(void *arg)
 		handle_even_coder_sleep(coder);
 	while (!simulation_stopped(coder->sim))
 	{
+		if (coder_is_done(coder))
+		{
+			set_state(coder, STATE_DONE);
+			mark_coder_done(coder);
+			break ;
+		}
 		if (!take_dongles(coder))
 			break ;
 		if (!compile(coder))
