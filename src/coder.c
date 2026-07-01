@@ -86,8 +86,7 @@ void	*coder_routine(void *arg)
 	{
 		if (coder_is_done(coder))
 		{
-			set_state(coder, STATE_DONE);
-			mark_coder_done(coder);
+			state_and_mark_as_done(coder);
 			break ;
 		}
 		if (!take_dongles(coder))

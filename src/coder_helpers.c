@@ -21,3 +21,9 @@ void	handle_even_coder_sleep(t_coder *coder)
 		+ coder->sim->config.dongle_cooldown;
 	smart_sleep(coder->sim, sleep_delay / 4);
 }
+
+void	state_and_mark_as_done(t_coder *coder)
+{
+	set_state(coder, STATE_DONE);
+	mark_coder_done(coder);
+}

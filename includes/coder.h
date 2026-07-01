@@ -64,5 +64,6 @@ void	wait_for_start(t_simulation *sim);
 
 //coder_helpers.c
 void	handle_even_coder_sleep(t_coder *coder);
+void	state_and_mark_as_done(t_coder *coder);
 
 #endif
