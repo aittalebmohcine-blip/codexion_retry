@@ -16,7 +16,6 @@ static int	parse_int_field(const char *arg, int *out, int must_be_positive);
 static int	valid_argc(int argc);
 static int	cheduler_type(char *s);
 
-/* TRANSITIONS: Raw argv → validated config state (21 lines) */
 int	parse_arguments(int argc, char **argv, t_config *config)
 {
 	if (!valid_argc(argc))
@@ -53,7 +52,6 @@ long long	get_time_ms(void)
 	return ((tv.tv_sec * 1000LL) + (tv.tv_usec / 1000));
 }
 
-/* CONSTRAINTS: Validates and populates a single integer field */
 static int	parse_int_field(const char *arg, int *out, int must_be_positive)
 {
 	int	val;

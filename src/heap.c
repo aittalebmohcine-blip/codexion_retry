@@ -52,9 +52,6 @@ void	heap_insert(t_heap *heap, t_request *request)
 	heap->size++;
 }
 
-/* smaller priority wins.
-** equal priority -> smaller coder id wins.
-*/
 int	request_before(t_request *a, t_request *b)
 {
 	if (a->priority < b->priority)

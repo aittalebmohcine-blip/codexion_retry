@@ -40,8 +40,6 @@ int				parse_arguments(int argc, char **argv, t_config *config);
 long long		get_time_ms(void);
 
 //parse_config_helpers.c
-
-/* CONSTRAINTS: Helper to print errors to stderr */
 void			print_error(const char *msg);
 int				is_valid_number(const char *str);
 

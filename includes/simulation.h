@@ -49,6 +49,7 @@ int			init_simulation(t_simulation *sim, t_config *config);
 void		init_simulation_state(t_simulation *sim, t_config *config);
 int			init_simulation_mutexes(t_simulation *sim);
 int			alloc_and_init_resources(t_simulation *sim);
+
 //init_sim_helpers.c
 void		destroy_sim_mutexes(t_simulation *sim, int stage);
 int			alloc_simulation(t_simulation *sim);
