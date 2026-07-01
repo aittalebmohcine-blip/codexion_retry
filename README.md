@@ -41,5 +41,4 @@ Each coder thread repeatedly tries to acquire the resources it needs to progress
 - Per-dongle `pthread_mutex_t` objects protect each dongle's state and its waiter queue.
 - A global `sim_mutex` protects shared simulation state such as coder status, counters, and last activity timestamps.
 - A `log_mutex` ensures console output is serialized across all threads.
-- A `stop_mutex` protects the stop flag, while `wait_mutex` and `wait_cond` are used to coordinate waiting threads safely.
 - Threads are created with `pthread_create` and joined with `pthread_join`, allowing the monitor and coder threads to work together without race conditions.
