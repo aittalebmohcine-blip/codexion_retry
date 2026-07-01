@@ -43,12 +43,12 @@ int	start_simulation(t_simulation *sim)
 		}
 		i++;
 	}
+	start_all_threads(sim);
 	if (pthread_create(&sim->monitor_thread, NULL, monitor_routine, sim))
 	{
 		stop_simulation(sim);
 		return (0);
 	}
-	start_all_threads(sim);
 	return (1);
 }
 
