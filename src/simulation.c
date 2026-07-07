@@ -28,7 +28,6 @@ int	start_simulation(t_simulation *sim)
 {
 	int	i;
 
-	sim->start_time_ms = get_time_ms();
 	i = 0;
 	while (i < sim->config.number_of_coders)
 	{
@@ -39,6 +38,13 @@ int	start_simulation(t_simulation *sim)
 				&sim->coders[i]))
 		{
 			stop_simulation(sim);
+			start_all_threads(sim);
+			while (i > 0)
+			{
+				i--;
+				pthread_join(sim->coders[i].thread, NULL);
+			}
+			destroy_simulation(sim);
 			return (0);
 		}
 		i++;
@@ -47,6 +53,12 @@ int	start_simulation(t_simulation *sim)
 	if (pthread_create(&sim->monitor_thread, NULL, monitor_routine, sim))
 	{
 		stop_simulation(sim);
+		while (i > 0)
+			{
+				i--;
+				pthread_join(sim->coders[i].thread, NULL);
+			}
+		destroy_simulation(sim);
 		return (0);
 	}
 	return (1);
@@ -59,12 +71,10 @@ void	wait_simulation(t_simulation *sim)
 	i = 0;
 	while (i < sim->config.number_of_coders)
 	{
-		if (pthread_join(sim->coders[i].thread, NULL) != 0)
-			perror("pthread_join (coder)");
+		pthread_join(sim->coders[i].thread, NULL);
 		i++;
 	}
-	if (pthread_join(sim->monitor_thread, NULL) != 0)
-		perror("pthread_join (monitor)");
+	pthread_join(sim->monitor_thread, NULL);
 }
 
 void	destroy_simulation(t_simulation *sim)
