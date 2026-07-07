@@ -24,6 +24,19 @@ static void	start_all_threads(t_simulation *sim)
 	pthread_mutex_unlock(&sim->coders_count_mutex);
 }
 
+static void	handle_coder_failure(t_simulation *sim, int *i, int stage)
+{
+	stop_simulation(sim);
+	if (stage == 0)
+		start_all_threads(sim);
+	while (*i > 0)
+	{
+		(*i)--;
+		pthread_join(sim->coders[*i].thread, NULL);
+	}
+	destroy_simulation(sim);
+}
+
 int	start_simulation(t_simulation *sim)
 {
 	int	i;
@@ -37,14 +50,7 @@ int	start_simulation(t_simulation *sim)
 				coder_routine,
 				&sim->coders[i]))
 		{
-			stop_simulation(sim);
-			start_all_threads(sim);
-			while (i > 0)
-			{
-				i--;
-				pthread_join(sim->coders[i].thread, NULL);
-			}
-			destroy_simulation(sim);
+			handle_coder_failure(sim, &i, 0);
 			return (0);
 		}
 		i++;
@@ -52,13 +58,7 @@ int	start_simulation(t_simulation *sim)
 	start_all_threads(sim);
 	if (pthread_create(&sim->monitor_thread, NULL, monitor_routine, sim))
 	{
-		stop_simulation(sim);
-		while (i > 0)
-			{
-				i--;
-				pthread_join(sim->coders[i].thread, NULL);
-			}
-		destroy_simulation(sim);
+		handle_coder_failure(sim, &i, 1);
 		return (0);
 	}
 	return (1);
