@@ -72,7 +72,7 @@ void	add_request(t_coder *coder)
 		deadline = coder->last_compile_time_ms;
 		pthread_mutex_unlock(&coder->sim->sim_mutex);
 		coder->request.priority = deadline
-			+ coder->sim->config.time_to_burnout;
+			+ get_sim_time(coder->sim);
 	}
 	if (!coder->requested)
 	{
