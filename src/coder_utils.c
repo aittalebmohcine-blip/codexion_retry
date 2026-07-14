@@ -16,7 +16,7 @@
 int	coder_is_done(t_coder *coder)
 {
 	if (coder->sim->config.number_of_compiles_required <= 0)
-		return (0);
+		return (1);
 	return (coder->compiles_done
 		>= coder->sim->config.number_of_compiles_required);
 }
